@@ -25,23 +25,10 @@ public class DNA {
 
   public void calculateFitness(GameObject ai, GameObject player) {
     float distance = Vector3.Distance(ai.transform.position, player.transform.position);
-    float newFitness = 1 / distance * 30;
-    newFitness = newFitness * newFitness * newFitness;
+    float newFitness = 1 / distance * 1000;
+    newFitness = newFitness;
     Debug.Log("DNA fitness: " + newFitness);
     fitness = newFitness;
-  }
-
-  public DNA crossover(DNA partner) {
-    int mid = Random.Range(0, size - 1);
-    Vector2[] newGenes = new Vector2[size];
-    for (int i = 0; i < size; i++) {
-      if (i < mid) {
-        newGenes[i] = genes[i];
-      } else {
-        newGenes[i] = partner.genes[i];
-      }
-    }
-    return new DNA(newGenes);
   }
 }
 
@@ -49,7 +36,7 @@ public class AI : Objective {
 
   public GameObject player;
 
-  private static int size = 20;
+  private static int size = 10;
   private List<DNA> dna = new List<DNA>();
   private DNA currentDNA;
   private Vector3 defaultPosition;
@@ -82,6 +69,19 @@ public class AI : Objective {
     }
 	}
 
+  public DNA crossover(DNA a, DNA b) {
+    int mid = Random.Range(0, size - 1);
+    Vector2[] newGenes = new Vector2[size];
+    for (int i = 0; i < size; i++) {
+      if (i < mid) {
+        newGenes[i] = a.genes[i];
+      } else {
+        newGenes[i] = b.genes[i];
+      }
+    }
+    return new DNA(newGenes);
+  }
+
   DNA GenerateNewDNA() {
     currentDNA.calculateFitness(gameObject, player);
 
@@ -110,7 +110,7 @@ public class AI : Objective {
       }
     }
 
-    float mutationRate = 0.1f;
+    float mutationRate = 0.05f;
     float prob = Random.Range(0.0f, 1.0f);
     if (dna.Count >= 2 && prob > mutationRate) {
       int indexA = Random.Range(0, matingPool.Count - 1);
@@ -120,9 +120,9 @@ public class AI : Objective {
         indexB = Random.Range(0, matingPool.Count - 1);
       }
       DNA parentB = matingPool[indexB];
-      // Debug.Log(parentA.fitness);
-      // Debug.Log(parentB.fitness);
-      return parentA.crossover(parentB);
+      Debug.Log("A: " + parentA.fitness);
+      Debug.Log("B: " + parentB.fitness);
+      return crossover(parentA, parentB);
     } else {
       return new DNA();
     }
