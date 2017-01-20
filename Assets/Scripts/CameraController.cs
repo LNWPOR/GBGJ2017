@@ -12,10 +12,27 @@ public class CameraController : MonoBehaviour {
     }
 
 	void Start () {
-        anim.Play("CameraZoomOutStep2");
+        anim.Play("CameraZoomInStep1");
     }
 	
 	void Update () {
 		
 	}
+
+    public void ZoomInStep1()
+    {
+        anim.Play("CameraZoomInStep1");
+    }
+    public void ZoomOutStep1()
+    {
+        anim.Play("CameraZoomOutStep1");
+    }
+    public void ZoomInStep2()
+    {
+        anim.Play("CameraZoomInStep2");
+    }
+    public void ZoomOutStep2()
+    {
+        anim.Play("CameraZoomOutStep2");
+    }
 }
