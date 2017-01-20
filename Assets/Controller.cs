@@ -65,7 +65,7 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
-        float z=0,x=0;
+        float z = 0, x = 0;
         if (Input.GetKey("w"))
         {
             z = 1;
@@ -88,7 +88,7 @@ public class Controller : MonoBehaviour
         {
             generateSound();
         }
-        if(isMove > 20)
+        if (isMove > 20)
         {
             isMove += 1;
             if (isMove == 40) isMove = 0;
@@ -97,6 +97,19 @@ public class Controller : MonoBehaviour
         else
         {
             player.velocity = new Vector3(x, 0, z).normalized * speed;
+        }
+    }
+
+    void OnCollisionStay(Collision other)
+    {
+        if (other.gameObject.tag.Equals("Item"))
+        {
+            float damage = 5;
+            ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
+            if (Input.GetKeyDown("space"))
+            {
+                itemControllerScript.Pull(5);
+            }
         }
     }
 }

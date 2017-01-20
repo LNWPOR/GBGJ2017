@@ -37,7 +37,7 @@ public class ItemController : MonoBehaviour {
         {
             itemCurrentHP = 0;
             CalculateCurrentColor(itemCurrentHP);
-            Debug.Log("Destroy Item");
+            Destroy(gameObject);
         }
     }
 
