@@ -18,4 +18,13 @@ public class WaveLife : MonoBehaviour {
             Destroy(gameObject);
         }
 	}
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag.Equals("Item"))
+        {
+            ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
+            itemControllerScript.generateSound();
+        }
+    }
 }

@@ -10,6 +10,8 @@ public class ItemController : MonoBehaviour {
     private float itemStartColorR;
     private float itemStartColorG;
     private float itemStartColorB;
+    public GameObject wave;
+    private float waveSpeed = 1;
 
     public Color myColor;
 
@@ -19,8 +21,9 @@ public class ItemController : MonoBehaviour {
         itemStartColorG = GetComponent<Renderer>().material.color.g;
         itemStartColorB = GetComponent<Renderer>().material.color.b;
 
-        GetComponent<Renderer>().material.color = myColor;
-        Debug.Log(myColor);
+        myColor = GetComponent<Renderer>().material.color;
+        generateSound();
+
     }
 
     public void Pull(float damage)
@@ -51,42 +54,42 @@ public class ItemController : MonoBehaviour {
         GameObject list;
         Rigidbody a;
         Renderer b;
-        list = Instantiate(wave, player.position, player.rotation);
+        list = Instantiate(wave, transform.position, transform.rotation);
         a = list.GetComponent<Rigidbody>();
         a.velocity = new Vector3(1, 0, 0) * waveSpeed;
         b = list.GetComponent<Renderer>();
         b.material.color = myColor;
-        list = Instantiate(wave, player.position, player.rotation);
+        list = Instantiate(wave, transform.position, transform.rotation);
         a = list.GetComponent<Rigidbody>();
         a.velocity = new Vector3(-1, 0, 0) * waveSpeed;
         b = list.GetComponent<Renderer>();
         b.material.color = myColor;
-        list = Instantiate(wave, player.position, player.rotation);
+        list = Instantiate(wave, transform.position, transform.rotation);
         a = list.GetComponent<Rigidbody>();
         a.velocity = new Vector3(0, 0, 1) * waveSpeed;
         b = list.GetComponent<Renderer>();
         b.material.color = myColor;
-        list = Instantiate(wave, player.position, player.rotation);
+        list = Instantiate(wave, transform.position, transform.rotation);
         a = list.GetComponent<Rigidbody>();
         a.velocity = new Vector3(0, 0, -1) * waveSpeed;
         b = list.GetComponent<Renderer>();
         b.material.color = myColor;
-        list = Instantiate(wave, player.position, player.rotation);
+        list = Instantiate(wave, transform.position, transform.rotation);
         a = list.GetComponent<Rigidbody>();
         a.velocity = new Vector3(1, 0, 1).normalized * waveSpeed;
         b = list.GetComponent<Renderer>();
         b.material.color = myColor;
-        list = Instantiate(wave, player.position, player.rotation);
+        list = Instantiate(wave, transform.position, transform.rotation);
         a = list.GetComponent<Rigidbody>();
         a.velocity = new Vector3(1, 0, -1).normalized * waveSpeed;
         b = list.GetComponent<Renderer>();
         b.material.color = myColor;
-        list = Instantiate(wave, player.position, player.rotation);
+        list = Instantiate(wave, transform.position, transform.rotation);
         a = list.GetComponent<Rigidbody>();
         a.velocity = new Vector3(-1, 0, 1).normalized * waveSpeed;
         b = list.GetComponent<Renderer>();
         b.material.color = myColor;
-        list = Instantiate(wave, player.position, player.rotation);
+        list = Instantiate(wave, transform.position, transform.rotation);
         a = list.GetComponent<Rigidbody>();
         a.velocity = new Vector3(-1, 0, -1).normalized * waveSpeed;
         b = list.GetComponent<Renderer>();
