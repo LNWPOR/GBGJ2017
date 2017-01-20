@@ -17,7 +17,8 @@ public class ItemController : Character {
     itemStartColorB = GetComponent<Renderer>().material.color.b;
 
     myColor = GetComponent<Renderer>().material.color;
-    base.GenerateSound();
+    // base.GenerateSound();
+    tag = "Item";
   }
 
   public void Pull(float damage)

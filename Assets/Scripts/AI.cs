@@ -72,11 +72,12 @@ public class AI : Character {
     Debug.Log("player position: " + playerLastKnownPosition);
     currentDNA = new DNA(transform.position, playerLastKnownPosition);
     defaultPosition = transform.position;
+    tag = "AI";
 	}
 
 	// Update is called once per frame
 	void Update () {
-    if (timeSinceLastJump == 4) {
+    if (timeSinceLastJump == 40) {
       // for (int i = 0; i < currentDNA.genes.Length; i++) {
       Jump();
       // }
@@ -94,11 +95,11 @@ public class AI : Character {
     if (CanKillPlayer()) {
       currentDNA.isKilledPlayer = true;
     } else {
-      base.GenerateSound();
       if (timeJumped < currentDNA.genes.Length) {
         Vector2 gene = currentDNA.genes[timeJumped];
         transform.position = transform.position + new Vector3(gene.x, 0, gene.y);
         timeJumped++;
+        base.GenerateSound(false);
       } else {
         currentDNA = GenerateNewDNA();
         transform.position = defaultPosition;

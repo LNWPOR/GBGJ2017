@@ -8,6 +8,7 @@ public class Controller : Character {
 
   void Start() {
     isMove = 0;
+    tag = "Player";
   }
 
 
@@ -28,7 +29,7 @@ public class Controller : Character {
     if (z != 0 || x != 0) isMove += 1;
     else isMove = 0;
     if (isMove == 10) {
-      base.GenerateSound();
+      base.GenerateSound(false);
     }
     if (isMove > 10) {
       isMove += 1;

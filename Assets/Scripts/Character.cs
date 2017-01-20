@@ -7,6 +7,7 @@ public class Character : MonoBehaviour {
   private float waveSpeed = 2.5f;
   public Color myColor;
   private int soundwaveCount = 24;
+  public string tag;
 
 	// Use this for initialization
 	void Start () {
@@ -19,10 +20,10 @@ public class Character : MonoBehaviour {
 	}
 
 
-  public void GenerateSound() {
+  public void GenerateSound(bool isSecondhand) {
     float degStep = 360f / soundwaveCount;
     for (float deg = 0; deg < 360f; deg += degStep) {
-      GenerateSoundParticle(PolarToCoorVector3(deg, 1));
+      GenerateSoundParticle(PolarToCoorVector3(deg, 1), isSecondhand);
     }
   }
 
@@ -31,7 +32,7 @@ public class Character : MonoBehaviour {
     return new Vector3(r * Mathf.Cos(radians), 0, r * Mathf.Sin(radians));
   }
 
-  private void GenerateSoundParticle(Vector3 soundVector) {
+  private void GenerateSoundParticle(Vector3 soundVector, bool isSecondhand) {
     GameObject list;
     Rigidbody a;
     Renderer b;
@@ -40,5 +41,8 @@ public class Character : MonoBehaviour {
     a.velocity = soundVector * waveSpeed;
     b = list.GetComponent<Renderer>();
     b.material.color = myColor;
+    WaveLife controller = list.GetComponent<WaveLife>();
+    controller.SetSourceTag(tag);
+    controller.SetIsSecondhand(isSecondhand);
   }
 }
