@@ -10,7 +10,7 @@ public class Character : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+    GetComponent<Renderer>().material.color = myColor;
 	}
 
 	// Update is called once per frame

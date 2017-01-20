@@ -6,8 +6,6 @@ public class Controller : Character {
   int isMove;
 
   void Start() {
-    GetComponent<Renderer>().material.color = myColor;
-    Debug.Log(myColor);
     isMove = 0;
   }
 

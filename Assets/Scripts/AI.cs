@@ -76,10 +76,10 @@ public class AI : Character {
 
 	// Update is called once per frame
 	void Update () {
-    if (timeSinceLastJump == 0) {
-      for (int i = 0; i < currentDNA.genes.Length; i++) {
-        Jump();
-      }
+    if (timeSinceLastJump == 4) {
+      // for (int i = 0; i < currentDNA.genes.Length; i++) {
+      Jump();
+      // }
       timeSinceLastJump = 0;
     } else {
       timeSinceLastJump++;
@@ -94,6 +94,7 @@ public class AI : Character {
     if (CanKillPlayer()) {
       currentDNA.isKilledPlayer = true;
     } else {
+      base.GenerateSound();
       if (timeJumped < currentDNA.genes.Length) {
         Vector2 gene = currentDNA.genes[timeJumped];
         transform.position = transform.position + new Vector3(gene.x, 0, gene.y);
