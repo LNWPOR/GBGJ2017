@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Controller : Character {
   public Rigidbody player;
+  public float speed;
   int isMove;
 
   void Start() {

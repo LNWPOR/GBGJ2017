@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Character : MonoBehaviour {
   public GameObject wave;
-  public float speed, waveSpeed;
+  private float waveSpeed = 2.5f;
   public Color myColor;
   private int soundwaveCount = 24;
 
