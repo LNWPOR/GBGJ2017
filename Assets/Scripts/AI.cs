@@ -7,6 +7,7 @@ public class DNA {
   public static int size = 10;
   public Vector2[] genes = new Vector2[size];
   public float fitness;
+  public bool isKilledPlayer = false;
 
   public DNA (Vector2[] newGenes) {
     genes = newGenes;
@@ -32,6 +33,10 @@ public class DNA {
     newFitness = newFitness * newFitness;
     Debug.Log("DNA fitness: " + newFitness);
     fitness = newFitness;
+    if (isKilledPlayer) {
+      Debug.Log("KILLED!!");
+      fitness *= 10;
+    }
   }
 
   Vector2 PolarToCoorVector2(float degrees, float r)
@@ -70,7 +75,9 @@ public class AI : Objective {
 	// Update is called once per frame
 	void Update () {
     if (timeSinceLastJump == 0) {
-      Jump();
+      for (int i = 0; i < currentDNA.genes.Length; i++) {
+        Jump();
+      }
       timeSinceLastJump = 0;
     } else {
       timeSinceLastJump++;
@@ -78,7 +85,9 @@ public class AI : Objective {
 	}
 
   void Jump() {
-    for (int i = 0; i < currentDNA.genes.Length; i++) {
+    if (CanKillPlayer()) {
+      currentDNA.isKilledPlayer = true;
+    } else {
       if (timeJumped < currentDNA.genes.Length) {
         Vector2 gene = currentDNA.genes[timeJumped];
         transform.position = transform.position + new Vector3(gene.x, 0, gene.y);
@@ -89,6 +98,11 @@ public class AI : Objective {
         timeJumped = 0;
       }
     }
+  }
+
+  bool CanKillPlayer() {
+    float distance = Vector3.Distance(transform.position, player.transform.position);
+    return distance < 3;
   }
 
   public DNA Crossover(DNA a, DNA b) {
@@ -106,7 +120,6 @@ public class AI : Objective {
 
   DNA GenerateNewDNA() {
     currentDNA.CalculateFitness(gameObject, player);
-
     // Remove less fit dna
     if (dna.Count == size) {
       int lessFitIndex = 0;
@@ -123,7 +136,6 @@ public class AI : Objective {
     } else {
       dna.Add(currentDNA);
     }
-
     // Mating
     List<DNA> matingPool = new List<DNA>();
     for (int i = 0; i < dna.Count; i++) {
@@ -131,7 +143,6 @@ public class AI : Objective {
         matingPool.Add(dna[i]);
       }
     }
-
     float mutationRate = 0.1f;
     float prob = Random.Range(0.0f, 1.0f);
     if (dna.Count >= 2 && prob > mutationRate) {
