@@ -13,22 +13,38 @@ public class DNA {
     fitness = 1;
   }
 
-  public DNA () {
+  public DNA (GameObject ai, GameObject player) {
+    Vector2 aiPos = new Vector2(ai.transform.position.x, ai.transform.position.z);
+    Vector2 playerPos = new Vector2(player.transform.position.x, player.transform.position.z);
+    float angle = AngleBetweenVector2(aiPos, playerPos);
+    float scale = 4f;
+    float degLimit = 180;
     for (int i = 0; i < size; i++) {
-      float scale = 0.3f;
-      float x = Random.Range(-scale, scale);
-      float y = Random.Range(-scale, scale);
-      genes[i] = new Vector2(x, y);
+      float deg = Random.Range(angle - degLimit / 2, angle + degLimit / 2);
+      genes[i] = PolarToCoorVector2(deg, scale);
     }
     fitness = 1;
   }
 
-  public void calculateFitness(GameObject ai, GameObject player) {
+  public void CalculateFitness(GameObject ai, GameObject player) {
     float distance = Vector3.Distance(ai.transform.position, player.transform.position);
-    float newFitness = 1 / distance * 1000;
-    newFitness = newFitness;
+    float newFitness = 1 / distance * 100;
+    newFitness = newFitness * newFitness;
     Debug.Log("DNA fitness: " + newFitness);
     fitness = newFitness;
+  }
+
+  Vector2 PolarToCoorVector2(float degrees, float r)
+  {
+    float radians = degrees * Mathf.Deg2Rad;
+    return new Vector2(r * Mathf.Sin(radians), r * Mathf.Cos(radians));
+  }
+
+  private float AngleBetweenVector2(Vector2 vec1, Vector2 vec2)
+  {
+    Vector2 diference = vec2 - vec1;
+    float sign = (vec2.y < vec1.y)? -1.0f : 1.0f;
+    return Vector2.Angle(Vector2.right, diference) * sign;
   }
 }
 
@@ -47,13 +63,22 @@ public class AI : Objective {
 	void Start () {
     Debug.Log("ai position: " + transform.position);
     Debug.Log("player position: " + player.transform.position);
-    currentDNA = new DNA();
+    currentDNA = new DNA(gameObject, player);
     defaultPosition = transform.position;
 	}
 
 	// Update is called once per frame
 	void Update () {
-    if (timeSinceLastJump == 1) {
+    if (timeSinceLastJump == 0) {
+      Jump();
+      timeSinceLastJump = 0;
+    } else {
+      timeSinceLastJump++;
+    }
+	}
+
+  void Jump() {
+    for (int i = 0; i < currentDNA.genes.Length; i++) {
       if (timeJumped < currentDNA.genes.Length) {
         Vector2 gene = currentDNA.genes[timeJumped];
         transform.position = transform.position + new Vector3(gene.x, 0, gene.y);
@@ -63,13 +88,10 @@ public class AI : Objective {
         transform.position = defaultPosition;
         timeJumped = 0;
       }
-      timeSinceLastJump = 0;
-    } else {
-      timeSinceLastJump++;
     }
-	}
+  }
 
-  public DNA crossover(DNA a, DNA b) {
+  public DNA Crossover(DNA a, DNA b) {
     int mid = Random.Range(0, size - 1);
     Vector2[] newGenes = new Vector2[size];
     for (int i = 0; i < size; i++) {
@@ -83,7 +105,7 @@ public class AI : Objective {
   }
 
   DNA GenerateNewDNA() {
-    currentDNA.calculateFitness(gameObject, player);
+    currentDNA.CalculateFitness(gameObject, player);
 
     // Remove less fit dna
     if (dna.Count == size) {
@@ -110,7 +132,7 @@ public class AI : Objective {
       }
     }
 
-    float mutationRate = 0.05f;
+    float mutationRate = 0.1f;
     float prob = Random.Range(0.0f, 1.0f);
     if (dna.Count >= 2 && prob > mutationRate) {
       int indexA = Random.Range(0, matingPool.Count - 1);
@@ -120,11 +142,9 @@ public class AI : Objective {
         indexB = Random.Range(0, matingPool.Count - 1);
       }
       DNA parentB = matingPool[indexB];
-      Debug.Log("A: " + parentA.fitness);
-      Debug.Log("B: " + parentB.fitness);
-      return crossover(parentA, parentB);
+      return Crossover(parentA, parentB);
     } else {
-      return new DNA();
+      return new DNA(gameObject, player);
     }
   }
 }
