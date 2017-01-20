@@ -7,15 +7,15 @@ public class ItemController : MonoBehaviour {
     public int ItemNumber;
     public float itemStartHP = 50;
     public float itemCurrentHP;
-    private float itemStartColorA;
-    private float itemStartColorB;
+    private float itemStartColorR;
     private float itemStartColorG;
+    private float itemStartColorB;
 
 	void Start () {
         itemCurrentHP = itemStartHP;
-        itemStartColorA = GetComponent<Renderer>().material.color.a;
-        itemStartColorB = GetComponent<Renderer>().material.color.b;
+        itemStartColorR = GetComponent<Renderer>().material.color.r;
         itemStartColorG = GetComponent<Renderer>().material.color.g;
+        itemStartColorB = GetComponent<Renderer>().material.color.b;
     }
 
     public void Pull(float damage)
@@ -36,9 +36,9 @@ public class ItemController : MonoBehaviour {
     private void CalculateCurrentColor(float itemCurrentHP)
     {
         float percentCurrentHP = itemCurrentHP / itemStartHP;
-        GetComponent<Renderer>().material.color = new Color(itemStartColorA * percentCurrentHP,
-                                                            itemStartColorB * percentCurrentHP,
-                                                            itemStartColorG * percentCurrentHP);
+        GetComponent<Renderer>().material.color = new Color(itemStartColorR * percentCurrentHP,
+                                                            itemStartColorG * percentCurrentHP,
+                                                            itemStartColorB * percentCurrentHP);
     }
 
 }
