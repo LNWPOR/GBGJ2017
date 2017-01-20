@@ -4,7 +4,10 @@ using System.Collections;
 public class Controller : Character {
   public Rigidbody player;
   public float speed;
+    public int NumSound = 6;
   int isMove;
+    public AudioSource sound;
+    public AudioClip[] footstep;
 
   public override void Start() {
     base.Start();
@@ -31,6 +34,8 @@ public class Controller : Character {
     if (z != 0 || x != 0) isMove += 1;
     else isMove = 0;
     if (isMove == 10) {
+            int randomFootstep = Random.Range(0, NumSound);
+            sound.PlayOneShot(footstep[randomFootstep], 1);
       base.GenerateSound(false, 30f);
     }
     if (isMove > 10) {
