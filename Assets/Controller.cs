@@ -6,13 +6,15 @@ public class Controller : Character {
   public float speed;
   int isMove;
 
-  void Start() {
+  public override void Start() {
+    base.Start();
     isMove = 0;
     tag = "Player";
   }
 
 
-  void Update() {
+  public override void Update() {
+    base.Update();
     float z = 0, x = 0;
     if (Input.GetKey("w")) {
       z = 1;
@@ -29,7 +31,7 @@ public class Controller : Character {
     if (z != 0 || x != 0) isMove += 1;
     else isMove = 0;
     if (isMove == 10) {
-      base.GenerateSound(false);
+      base.GenerateSound(false, 30f);
     }
     if (isMove > 10) {
       isMove += 1;
@@ -47,6 +49,7 @@ public class Controller : Character {
       ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
       if (Input.GetKeyDown("space"))
       {
+        base.GenerateSound(true, 30f);
         itemControllerScript.Pull(5);
       }
     }

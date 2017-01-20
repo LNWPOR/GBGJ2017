@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WaveLife : MonoBehaviour {
   float life;
-  public float lifespan = 60f;
+  private float lifespan = 30f;
   private string sourceTag;
   public bool isWaveSecondhand;
 
@@ -21,6 +21,10 @@ public class WaveLife : MonoBehaviour {
     }
 	}
 
+  public void SetLifespan(float newLifespan) {
+    lifespan = newLifespan;
+  }
+
   public void SetSourceTag(string tag) {
     sourceTag = tag;
   }
@@ -34,19 +38,19 @@ public class WaveLife : MonoBehaviour {
     if (other.gameObject.tag.Equals("Item")) {
       if (!isWaveSecondhand) {
         ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
-        itemControllerScript.GenerateSound(true);
+        itemControllerScript.GenerateSound(true, 20f);
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("Player")) {
       if (!isWaveSecondhand) {
         Controller playerControllerScript = other.gameObject.GetComponent<Controller>();
-        playerControllerScript.GenerateSound(true);
+        playerControllerScript.GenerateSound(true, 20f);
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("AI")) {
       if (!isWaveSecondhand) {
         AI aiControllerScript = other.gameObject.GetComponent<AI>();
-        aiControllerScript.GenerateSound(true);
+        aiControllerScript.GenerateSound(true, 20f);
       }
       Destroy(gameObject);
     }

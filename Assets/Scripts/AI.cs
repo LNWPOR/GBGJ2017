@@ -67,7 +67,8 @@ public class AI : Character {
   public static float rangeClose = 12f;
 
 	// Use this for initialization
-	void Start () {
+	public override void Start () {
+    base.Start();
     Debug.Log("ai position: " + transform.position);
     Debug.Log("player position: " + playerLastKnownPosition);
     currentDNA = new DNA(transform.position, playerLastKnownPosition);
@@ -76,7 +77,8 @@ public class AI : Character {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	public override void Update () {
+    base.Update();
     if (timeSinceLastJump == 40) {
       // for (int i = 0; i < currentDNA.genes.Length; i++) {
       Jump();
@@ -99,7 +101,7 @@ public class AI : Character {
         Vector2 gene = currentDNA.genes[timeJumped];
         transform.position = transform.position + new Vector3(gene.x, 0, gene.y);
         timeJumped++;
-        base.GenerateSound(false);
+        base.GenerateSound(false, 40f);
       } else {
         currentDNA = GenerateNewDNA();
         transform.position = defaultPosition;

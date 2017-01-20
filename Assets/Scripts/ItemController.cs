@@ -10,7 +10,8 @@ public class ItemController : Character {
   private float itemStartColorG;
   private float itemStartColorB;
 
-  void Start () {
+  public override void Start () {
+    base.Start();
     itemCurrentHP = itemStartHP;
     itemStartColorR = GetComponent<Renderer>().material.color.r;
     itemStartColorG = GetComponent<Renderer>().material.color.g;
