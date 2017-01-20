@@ -14,21 +14,20 @@ public class DNA {
     fitness = 1;
   }
 
-  public DNA (GameObject ai, GameObject player) {
-    Vector2 aiPos = new Vector2(ai.transform.position.x, ai.transform.position.z);
-    Vector2 playerPos = new Vector2(player.transform.position.x, player.transform.position.z);
+  public DNA (Vector3 ai, Vector3 player) {
+    Vector2 aiPos = new Vector2(ai.x, ai.z);
+    Vector2 playerPos = new Vector2(player.x, player.z);
     float angle = AngleBetweenVector2(aiPos, playerPos);
-    float scale = 4f;
     float degLimit = 180;
     for (int i = 0; i < size; i++) {
       float deg = Random.Range(angle - degLimit / 2, angle + degLimit / 2);
-      genes[i] = PolarToCoorVector2(deg, scale);
+      genes[i] = PolarToCoorVector2(deg, AI.scale);
     }
     fitness = 1;
   }
 
-  public void CalculateFitness(GameObject ai, GameObject player) {
-    float distance = Vector3.Distance(ai.transform.position, player.transform.position);
+  public void CalculateFitness(Vector3 ai, Vector3 player) {
+    float distance = Vector3.Distance(ai, player);
     float newFitness = 1 / distance * 100;
     newFitness = newFitness * newFitness;
     Debug.Log("DNA fitness: " + newFitness);
@@ -54,21 +53,24 @@ public class DNA {
 }
 
 public class AI : Objective {
+  public static int size = 10;
 
-  public GameObject player;
-
-  private static int size = 10;
   private List<DNA> dna = new List<DNA>();
   private DNA currentDNA;
   private Vector3 defaultPosition;
   private int timeSinceLastJump = 0;
   private int timeJumped = 0;
 
+  public Vector3 playerLastKnownPosition;
+  public static float scale = 4f;
+  public static int degStep = 72;
+  public static float rangeClose = 12f;
+
 	// Use this for initialization
 	void Start () {
     Debug.Log("ai position: " + transform.position);
-    Debug.Log("player position: " + player.transform.position);
-    currentDNA = new DNA(gameObject, player);
+    Debug.Log("player position: " + playerLastKnownPosition);
+    currentDNA = new DNA(transform.position, playerLastKnownPosition);
     defaultPosition = transform.position;
 	}
 
@@ -83,6 +85,10 @@ public class AI : Objective {
       timeSinceLastJump++;
     }
 	}
+
+  void updatePlayerLastKnowPosition(Vector3 pos) {
+    playerLastKnownPosition = pos;
+  }
 
   void Jump() {
     if (CanKillPlayer()) {
@@ -101,8 +107,8 @@ public class AI : Objective {
   }
 
   bool CanKillPlayer() {
-    float distance = Vector3.Distance(transform.position, player.transform.position);
-    return distance < 3;
+    float distance = Vector3.Distance(transform.position, playerLastKnownPosition);
+    return distance < AI.scale / 2;
   }
 
   public DNA Crossover(DNA a, DNA b) {
@@ -119,7 +125,7 @@ public class AI : Objective {
   }
 
   DNA GenerateNewDNA() {
-    currentDNA.CalculateFitness(gameObject, player);
+    currentDNA.CalculateFitness(transform.position, playerLastKnownPosition);
     // Remove less fit dna
     if (dna.Count == size) {
       int lessFitIndex = 0;
@@ -155,7 +161,7 @@ public class AI : Objective {
       DNA parentB = matingPool[indexB];
       return Crossover(parentA, parentB);
     } else {
-      return new DNA(gameObject, player);
+      return new DNA(transform.position, playerLastKnownPosition);
     }
   }
 }
