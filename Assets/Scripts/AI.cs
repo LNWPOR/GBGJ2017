@@ -52,7 +52,7 @@ public class DNA {
   }
 }
 
-public class AI : Objective {
+public class AI : Character {
   public static int size = 10;
 
   private List<DNA> dna = new List<DNA>();
