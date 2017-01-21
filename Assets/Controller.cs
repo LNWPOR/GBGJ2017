@@ -48,14 +48,15 @@ public class Controller : Character {
       int randomFootstep = Random.Range(0, NumSound);
       sound.PlayOneShot(footstep[randomFootstep], 1);
       base.GenerateSound(false, 30f);
+      isMove = 0;
     }
-    if (isMove > 20) {
+    /*if (isMove > 20) {
       isMove += 1;
       if (isMove == 30) isMove = 0;
       player.velocity = new Vector3(0, 0, 0);
-    } else {
+    } else {*/
       player.velocity = new Vector3(x, 0, z).normalized * speed;
-    }
+    //}
 
         Plane playerPlane = new Plane(Vector3.up, transform.position);
     	Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
