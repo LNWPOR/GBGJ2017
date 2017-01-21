@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Character : MonoBehaviour {
   public GameObject wave;
-  private float waveSpeed = 4f;
+  private float waveSpeed = 6f;
   public Color myColor;
   private int soundwaveCount = 60;
   public string tag;
@@ -48,8 +48,8 @@ public class Character : MonoBehaviour {
     a.velocity = soundVector * waveSpeed;
     b = list.GetComponent<Renderer>();
     b.material.color = myColor;
-        b = list.GetComponent<TrailRenderer>();
-        b.materials[0].color = myColor;
+    b = list.GetComponent<TrailRenderer>();
+    b.materials[0].color = myColor;
     WaveLife controller = list.GetComponent<WaveLife>();
     controller.SetLifespan(lifespan);
     controller.SetSourceTag(tag);
