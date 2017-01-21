@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -55,6 +55,7 @@ public class DNA {
 public class AI : Character {
   public static int size = 10;
   public GameObject player;
+  private Controller playerScript;
 
   // private List<DNA> dna = new List<DNA>();
   private DNA currentDNA;
@@ -64,7 +65,7 @@ public class AI : Character {
 
   private Vector3 playerLastKnownPosition;
   public static float speed = 6f;
-  public static int jumpInterval = 50;
+  public static int jumpInterval = 40;
   public static int beforeJumpInterval = jumpInterval / 2;
   public static int degStep = 20;
   public static float rangeClose = 18f;
@@ -83,6 +84,7 @@ public class AI : Character {
     FindRegion();
     currentDNA = new DNA(transform.position, playerLastKnownPosition);
     defaultPosition = transform.position;
+    playerScript = player.GetComponent<Controller>();
     // GetComponent<Renderer>().enabled = false;
     tag = "AI";
 	}
@@ -106,7 +108,7 @@ public class AI : Character {
         float fracJourney = time * 1f / (jumpInterval - beforeJumpInterval);
         Vector3 targetPosition = defaultPosition + new Vector3(gene.x, 0, gene.y);
         transform.LookAt(targetPosition);
-        transform.Rotate(90, 0, 0);
+        transform.Rotate(0, 0, 0);
         transform.position = Vector3.Lerp(defaultPosition, targetPosition, fracJourney);
       }
     }
@@ -148,6 +150,7 @@ public class AI : Character {
 
   public bool CanKillPlayer() {
     if (!isOnTheFloor) return false;
+    if (playerScript.IsDiving()) return false;
     float distance = Vector3.Distance(transform.position, player.transform.position);
     if (distance < 1.2f) {
       Debug.Log("DIST: " + distance);

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,16 +6,19 @@ public class GameManager : MonoBehaviour {
   public GameObject player;
   public GameObject ai;
   private AI aiScript;
+  private Controller playerScript;
 
   private float flashInterval = 300f;
   private float time = 0;
 
   private string stateLabel;
+  private string isDivingLabel;
 
 	// Use this for initialization
 	void Start () {
     stateLabel = "Run, Forest, RUN!";
     aiScript = ai.GetComponent<AI>();
+    playerScript = player.GetComponent<Controller>();
 	}
 
 	// Update is called once per frame
@@ -28,6 +31,11 @@ public class GameManager : MonoBehaviour {
     } else if (time >= flashInterval) {
       time = 0;
     }
+    if (playerScript.IsDiving()) {
+      isDivingLabel = "DIVING";
+    } else {
+      isDivingLabel = "Above water";
+    }
     time++;
     if (aiScript.CanKillPlayer()) {
       stateLabel = "DIE!";
@@ -35,6 +43,7 @@ public class GameManager : MonoBehaviour {
 	}
 
   void OnGUI() {
-    GUI.Label(new Rect(10, 10, 200, 50), stateLabel);
+    GUI.Label(new Rect(10, 10, 200, 20), stateLabel);
+    GUI.Label(new Rect(10, 30, 200, 20), isDivingLabel);
   }
 }

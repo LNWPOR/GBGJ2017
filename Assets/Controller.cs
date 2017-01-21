@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Controller : Character {
@@ -11,14 +11,20 @@ public class Controller : Character {
   public AudioClip[] footstep;
   public GameObject splashstep;
   private bool isRunning = false;
+  private bool isCtrlDown = false;
+  private bool isDiving = false;
 
+  private float timeAfterDiving = 0f;
+  private float timeAbleToDive = 60f;
+  private float divingCooldownCount;
+  private float divingCooldown = 200f;
 
   public override void Start() {
     base.Start();
     isMove = 0;
     tag = "Player";
+    divingCooldownCount = divingCooldown;
   }
-
 
   public override void Update() {
     base.Update();
@@ -35,19 +41,41 @@ public class Controller : Character {
     if (Input.GetKey("d")) {
       x = 1;
     }
+    if ((Input.GetKeyUp(KeyCode.LeftControl) && timeAfterDiving > 0) || timeAfterDiving >= timeAbleToDive) {
+      divingCooldownCount = 0;
+      timeAfterDiving = 0;
+    }
+    if (Input.GetKey(KeyCode.LeftControl)) {
+      isCtrlDown = true;
+    } else {
+      isCtrlDown = false;
+    }
+    divingCooldownCount++;
+    Debug.Log("Diving cd: " + divingCooldownCount);
     if (z != 0 || x != 0) {
-      if (isMove == 0) {
-        base.GenerateSound(false, 4f);
+      if (isCtrlDown && timeAfterDiving < timeAbleToDive && divingCooldownCount >= divingCooldown) {
+        isDiving = true;
+        timeAfterDiving++;
+        isMove = 0;
         player.velocity = new Vector3(x, 0, z).normalized * speed;
-        splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.5f;
+        splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
+      } else {
+        isDiving = false;
+        if (!isCtrlDown) timeAfterDiving = 0f;
+        // if (isMove == 0) {
+        //   base.GenerateSound(false, 4f);
+        //   player.velocity = new Vector3(x, 0, z).normalized * speed;
+        //   splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
+        // }
+        // if (isRunning) {
+        //   splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
+        //   player.velocity = new Vector3(x, 0, z).normalized * speed * 2f;
+        // }
+        if (isMove == 0) base.GenerateSound(false, 50f);
+        splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
+        player.velocity = new Vector3(x, 0, z).normalized * speed * 2f;
+        isMove += 1;
       }
-      if (isRunning) {
-
-        splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.5f;
-        player.velocity = new Vector3(x, 0, z).normalized * speed * 3f;
-
-      }
-      isMove += 1;
     }
     else {
       isRunning = false;
@@ -73,22 +101,25 @@ public class Controller : Character {
       transform.Rotate(90, 0, 0);
     	// transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
 		}
+    soundBeat();
+  }
 
-      soundBeat();
-    }
-
-    void soundBeat()
+  void soundBeat()
+  {
+    float DisPlaAI = Vector3.Distance(player.transform.position, AI.transform.position);
+    if (DisPlaAI > 20)
     {
-      float DisPlaAI = Vector3.Distance(player.transform.position, AI.transform.position);
-      if (DisPlaAI > 20)
-      {
-        heartsound.pitch = 1;
-      }
-      else
-      {
-        heartsound.pitch = 3 - 2 * (DisPlaAI / 20);
-      }
+      heartsound.pitch = 1;
     }
+    else
+    {
+      heartsound.pitch = 3 - 2 * (DisPlaAI / 20);
+    }
+  }
+
+  public bool IsDiving() {
+    return isDiving;
+  }
 
   void OnTriggerStay(Collider other) {
     if (other.gameObject.tag.Equals("Item"))
