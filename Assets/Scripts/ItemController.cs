@@ -9,6 +9,7 @@ public class ItemController : Character {
   private float itemStartColorR;
   private float itemStartColorG;
   private float itemStartColorB;
+  public GameObject mainCamera;
 
   public override void Start () {
     base.Start();
@@ -33,6 +34,7 @@ public class ItemController : Character {
     {
       itemCurrentHP = 0;
       CalculateCurrentColor(itemCurrentHP);
+      mainCamera.GetComponent<CameraController>().ZoomOutStep2();
       Destroy(gameObject);
     }
   }
