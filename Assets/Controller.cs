@@ -16,7 +16,6 @@ public class Controller : Character {
     base.Start();
     isMove = 0;
     tag = "Player";
-    LevelDis = 5;
   }
 
 
@@ -75,8 +74,14 @@ public class Controller : Character {
     {
         float DisPlaAI = Vector3.Distance(player.transform.position, AI.transform.position);
         Debug.Log(DisPlaAI);
-        if (DisPlaAI > 20) heartsound.pitch = 1;
-        else heartsound.pitch = 2 - (DisPlaAI / 20);
+        if (DisPlaAI > 20)
+        {
+            heartsound.pitch = 1;
+        }
+        else
+        {
+            heartsound.pitch = 3 - 2 * (DisPlaAI / 20);
+        }
     }
 
   void OnTriggerStay(Collider other) {
