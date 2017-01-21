@@ -6,7 +6,7 @@ public class ItemColliderCheck : MonoBehaviour {
 
     public GameObject camera;
     private CameraController cameraControllerScript;
-    private List<GameObject> itemInRangeList;
+    public List<GameObject> itemInRangeList;
     private GameObject currentNearestItem;
     private float currentNearestOffset = -1;
     private Vector3 newCamPos;
