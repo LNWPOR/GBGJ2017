@@ -54,7 +54,11 @@ public class Controller : Character {
       ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
       if (Input.GetKeyDown("space"))
       {
+<<<<<<< HEAD
         base.GenerateSound(true, 300f);
+=======
+        base.GenerateSound(true, 80f);
+>>>>>>> origin/master
         itemControllerScript.Pull(5);
       }
     }
