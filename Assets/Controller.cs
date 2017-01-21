@@ -36,12 +36,12 @@ public class Controller : Character {
         if (z != 0 || x != 0)
         {
             isMove += 1;
-            splashstep.SetActive(true);
+            splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.5f;
         }
         else
         {
             isMove = 0;
-            splashstep.SetActive(false);
+            splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0;
         }
     if (isMove == 20) {
       int randomFootstep = Random.Range(0, NumSound);
