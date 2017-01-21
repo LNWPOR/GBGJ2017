@@ -7,6 +7,7 @@ public class WaveLife : MonoBehaviour {
   private float lifespan = 30f;
   private string sourceTag;
   public bool isWaveSecondhand;
+  private Vector3 sourcePosition;
 
 	void Start () {
     life = 0;
@@ -20,6 +21,10 @@ public class WaveLife : MonoBehaviour {
       Destroy(gameObject);
     }
 	}
+
+  public void SetSourcePosition(Vector3 pos) {
+    sourcePosition = pos;
+  }
 
   public void SetLifespan(float newLifespan) {
     lifespan = newLifespan;
@@ -48,9 +53,12 @@ public class WaveLife : MonoBehaviour {
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("AI")) {
+      AI aiControllerScript = other.gameObject.GetComponent<AI>();
       if (!isWaveSecondhand) {
-        AI aiControllerScript = other.gameObject.GetComponent<AI>();
         aiControllerScript.GenerateSound(true, 20f);
+      }
+      if (sourceTag == "Player") {
+        aiControllerScript.UpdatePlayerLastKnownPosition(sourcePosition);
       }
       Destroy(gameObject);
     }
