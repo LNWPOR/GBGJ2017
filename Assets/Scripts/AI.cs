@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public class DNA {
   public static int size = 6;
@@ -30,7 +30,7 @@ public class DNA {
 
   public void CalculateFitness(Vector3 ai, Vector3 player) {
     float distance = Vector3.Distance(ai, player);
-    float newFitness = 1 / distance * 100;
+    float newFitness = 1 / distance * 20;
     newFitness = newFitness * newFitness;
     fitness = newFitness;
     if (isKilledPlayer) {
@@ -74,6 +74,7 @@ public class AI : Character {
   private int currentRangeRegion = 0;
   private string label;
   public bool isOnTheFloor = true;
+  private bool isAddedScene = false;
 
 	// Use this for initialization
 	public override void Start () {
@@ -91,6 +92,7 @@ public class AI : Character {
 	// Update is called once per frame
 	public override void Update () {
     base.Update();
+    if (isAddedScene) return;
     if (isOnTheFloor && CanKillPlayer()) return;
     if (timeSinceLastJump == jumpInterval) {
       Jump();
@@ -112,6 +114,14 @@ public class AI : Character {
     }
 	}
 
+  void Awake() {
+    DontDestroyOnLoad(gameObject);
+  }
+
+  public List<DNA>[,] GetDNALegacy() {
+    return dnaLegacy;
+  }
+
   void InitDNALegacy() {
     for (int i = 0; i < degStep; i++) {
       for (int j = 0; j < 2; j++) {
@@ -121,7 +131,9 @@ public class AI : Character {
   }
 
   void OnGUI() {
-    GUI.Label(new Rect(10, 40, 200, 50), label);
+    if (!isAddedScene) {
+      GUI.Label(new Rect(10, 40, 200, 50), label);
+    }
   }
 
   public void UpdatePlayerLastKnownPosition(Vector3 pos) {
@@ -148,6 +160,10 @@ public class AI : Character {
     float distance = Vector3.Distance(transform.position, player.transform.position);
     if (distance < 1.2f) {
       label = "YOU ARE DEAD";
+      if (!isAddedScene) {
+        SceneManager.LoadScene("Result");
+        isAddedScene = true;
+      }
       return true;
     } else {
       return false;

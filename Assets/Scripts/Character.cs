@@ -20,6 +20,9 @@ public class Character : MonoBehaviour {
     lastHitByWave++;
 	}
 
+  public virtual void Awake () {
+	}
+
   public bool IsResonanceable() {
     return lastHitByWave >= hitByWaveInterval;
   }
