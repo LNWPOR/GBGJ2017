@@ -18,7 +18,7 @@ public class DNA {
     Vector2 aiPos = new Vector2(ai.x, ai.z);
     Vector2 playerPos = new Vector2(player.x, player.z);
     float angle = AngleBetweenVector2(aiPos, playerPos);
-    float degLimit = 180;
+    float degLimit = 120;
     for (int i = 0; i < size; i++) {
       float deg = Random.Range(angle - degLimit / 2, angle + degLimit / 2);
       float speed = Random.Range(AI.speed / 10, AI.speed);
@@ -63,7 +63,7 @@ public class AI : Character {
   private int timeJumped = 0;
 
   private Vector3 playerLastKnownPosition;
-  public static float speed = 8f;
+  public static float speed = 6f;
   public static int jumpInterval = 50;
   public static int beforeJumpInterval = jumpInterval / 2;
   public static int degStep = 20;

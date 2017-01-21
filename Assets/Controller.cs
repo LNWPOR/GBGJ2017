@@ -57,7 +57,7 @@ public class Controller : Character {
       if (isMove == 0) {
         base.GenerateSound(false, 4f);
         player.velocity = new Vector3(x, 0, z).normalized * speed;
-        splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.1f;
+        splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
       }
       if (isRunning) {
         splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
@@ -69,7 +69,7 @@ public class Controller : Character {
     else {
       isRunning = false;
       isMove = 0;
-      splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0;
+      splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
       player.velocity = new Vector3(0, 0, 0);
 <<<<<<< HEAD
     } else {*/
