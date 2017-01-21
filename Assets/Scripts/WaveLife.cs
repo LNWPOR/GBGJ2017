@@ -46,7 +46,7 @@ public class WaveLife : MonoBehaviour {
     if (other.gameObject.tag.Equals("Item")) {
       ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
       if (!isWaveSecondhand && itemControllerScript.IsResonanceable() && sourceTag == "Player") {
-        itemControllerScript.GenerateSound(true, 20f);
+        itemControllerScript.GenerateSound(true, 50f);
       }
       if (sourceTag == "Player") {
         itemControllerScript.GetHitByWave();
@@ -55,7 +55,7 @@ public class WaveLife : MonoBehaviour {
     } else if (other.gameObject.tag.Equals("Player")) {
       Controller playerControllerScript = other.gameObject.GetComponent<Controller>();
       if (!isWaveSecondhand && playerControllerScript.IsResonanceable()) {
-        playerControllerScript.GenerateSound(true, 20f);
+        playerControllerScript.GenerateSound(true, 50f);
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("AI")) {
@@ -64,7 +64,7 @@ public class WaveLife : MonoBehaviour {
       if (sourceTag == "Player") {
         aiControllerScript.UpdatePlayerLastKnownPosition(sourcePosition);
       } else if (!isWaveSecondhand && aiControllerScript.IsResonanceable()) {
-        aiControllerScript.GenerateSound(true, 200f);
+        aiControllerScript.GenerateSound(true, 20f);
       }
       Destroy(gameObject);
     }

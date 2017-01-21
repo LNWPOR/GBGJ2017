@@ -63,11 +63,11 @@ public class AI : Character {
   private int timeJumped = 0;
 
   private Vector3 playerLastKnownPosition;
-  public static float speed = 6f;
-  public static int jumpInterval = 60;
+  public static float speed = 8f;
+  public static int jumpInterval = 50;
   public static int beforeJumpInterval = jumpInterval / 2;
   public static int degStep = 20;
-  public static float rangeClose = 12f;
+  public static float rangeClose = 18f;
 
   private List<DNA>[,] dnaLegacy = new List<DNA>[degStep,2];
   private int currentDegRegion = 0;
@@ -106,7 +106,7 @@ public class AI : Character {
         float fracJourney = time * 1f / (jumpInterval - beforeJumpInterval);
         Vector3 targetPosition = defaultPosition + new Vector3(gene.x, 0, gene.y);
         transform.LookAt(targetPosition);
-        transform.Rotate( 90, 0, 0 );
+        transform.Rotate(90, 0, 0);
         transform.position = Vector3.Lerp(defaultPosition, targetPosition, fracJourney);
       }
     }
@@ -136,10 +136,10 @@ public class AI : Character {
   void Jump() {
     if (timeJumped < currentDNA.genes.Length - 1) {
       timeJumped++;
-      base.GenerateSound(false, 40f);
+      base.GenerateSound(false, 50f);
     } else {
       timeJumped = 0;
-      base.GenerateSound(false, 40f);
+      base.GenerateSound(false, 50f);
       UpdatePlayerLastKnownPosition(player.transform.position);
     }
   }

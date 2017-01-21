@@ -2,14 +2,15 @@
 using System.Collections;
 
 public class Controller : Character {
-    public Rigidbody player;
-    public GameObject AI;
+  public Rigidbody player;
+  public GameObject AI;
   public float speed;
-    public int NumSound = 6;
+  public int NumSound = 6;
   int isMove;
-    public AudioSource sound, heartsound;
-    public AudioClip[] footstep;
-    public GameObject splashstep;
+  public AudioSource sound, heartsound;
+  public AudioClip[] footstep;
+  public GameObject splashstep;
+  private bool isRunning = false;
 
 
   public override void Start() {
@@ -51,9 +52,26 @@ public class Controller : Character {
       isMove = 0;
     }
     /*if (isMove > 20) {
+=======
+    if (z != 0 || x != 0) {
+      if (isMove == 0) {
+        base.GenerateSound(false, 4f);
+        player.velocity = new Vector3(x, 0, z).normalized * speed;
+        splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.1f;
+      }
+      if (isRunning) {
+        splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
+        player.velocity = new Vector3(x, 0, z).normalized * speed * 3f;
+      }
+>>>>>>> origin/master
       isMove += 1;
-      if (isMove == 30) isMove = 0;
+    }
+    else {
+      isRunning = false;
+      isMove = 0;
+      splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0;
       player.velocity = new Vector3(0, 0, 0);
+<<<<<<< HEAD
     } else {*/
       player.velocity = new Vector3(x, 0, z).normalized * speed;
     //}
@@ -66,22 +84,23 @@ public class Controller : Character {
         	Vector3 targetPoint = ray.GetPoint(hitdist);
         	Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
         	transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
-		}
+    }
+    
 
-        soundBeat();
+      soundBeat();
     }
 
     void soundBeat()
     {
-        float DisPlaAI = Vector3.Distance(player.transform.position, AI.transform.position);
-        if (DisPlaAI > 20)
-        {
-            heartsound.pitch = 1;
-        }
-        else
-        {
-            heartsound.pitch = 3 - 2 * (DisPlaAI / 20);
-        }
+      float DisPlaAI = Vector3.Distance(player.transform.position, AI.transform.position);
+      if (DisPlaAI > 20)
+      {
+        heartsound.pitch = 1;
+      }
+      else
+      {
+        heartsound.pitch = 3 - 2 * (DisPlaAI / 20);
+      }
     }
 
   void OnTriggerStay(Collider other) {
