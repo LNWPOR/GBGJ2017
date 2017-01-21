@@ -83,7 +83,7 @@ public class AI : Character {
     FindRegion();
     currentDNA = new DNA(transform.position, playerLastKnownPosition);
     defaultPosition = transform.position;
-    GetComponent<Renderer>().enabled = false;
+    // GetComponent<Renderer>().enabled = false;
     tag = "AI";
 	}
 
@@ -91,7 +91,7 @@ public class AI : Character {
 	public override void Update () {
     base.Update();
     if (isAddedScene) return;
-    if (isOnTheFloor && CanKillPlayer()) return;
+    if (CanKillPlayer()) return;
     if (timeSinceLastJump == jumpInterval) {
       Jump();
       timeSinceLastJump = 0;
@@ -147,8 +147,10 @@ public class AI : Character {
   }
 
   public bool CanKillPlayer() {
+    if (!isOnTheFloor) return false;
     float distance = Vector3.Distance(transform.position, player.transform.position);
     if (distance < 1.2f) {
+      Debug.Log("DIST: " + distance);
       if (!isAddedScene) {
         SceneManager.LoadScene("Result");
         isAddedScene = true;

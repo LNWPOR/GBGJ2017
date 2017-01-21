@@ -43,7 +43,7 @@ public class Controller : Character {
       }
       if (isRunning) {
         splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
-        player.velocity = new Vector3(x, 0, z).normalized * speed * 3f;
+        player.velocity = new Vector3(x, 0, z).normalized * speed * 2f;
       }
       isMove += 1;
     }

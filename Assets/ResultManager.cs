@@ -11,6 +11,7 @@ public class ResultManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
     ai = GameObject.Find("AI");
+    ai.transform.position = new Vector3(-10000, 0, -10000);
     aiScript = ai.GetComponent<AI>();
     dnaLegacy = aiScript.GetDNALegacy();
 	}
