@@ -44,7 +44,10 @@ public class ItemController : Character {
     else {
       itemCurrentHP = 0;
       CalculateCurrentColor(itemCurrentHP);
-      mainCamera.GetComponent<CameraController>().ZoomOutStep2();
+      //mainCamera.GetComponent<CameraController>().ZoomOutStep2();
+      List<GameObject> itemInRangeList = GameObject.Find("ItemColliderCheck").GetComponent<ItemColliderCheck>().itemInRangeList;
+      int index = itemInRangeList.FindIndex(x => x.gameObject.name.Equals(gameObject.name));
+      itemInRangeList.RemoveAt(index);
       Destroy(gameObject);
     }
   }

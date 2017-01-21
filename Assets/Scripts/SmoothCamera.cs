@@ -12,7 +12,7 @@ public class SmoothCamera : MonoBehaviour {
     {
         //transform.position = Vector3.Lerp(transform.position, lookAt.transform.position, smoothSpeed);
         
-        Vector3 desiredPosition = new Vector3(lookAt.transform.position.x, 9f, lookAt.transform.position.z);
+        Vector3 desiredPosition = new Vector3(lookAt.transform.position.x, transform.position.y, lookAt.transform.position.z);
         if (smooth)
         {
             transform.position = Vector3.Lerp(transform.position,desiredPosition,smoothSpeed);
