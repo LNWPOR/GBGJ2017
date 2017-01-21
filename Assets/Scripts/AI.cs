@@ -21,7 +21,8 @@ public class DNA {
     float degLimit = 180;
     for (int i = 0; i < size; i++) {
       float deg = Random.Range(angle - degLimit / 2, angle + degLimit / 2);
-      Vector2 newVector = PolarToCoorVector2(deg, AI.speed);
+      float speed = Random.Range(AI.speed / 10, AI.speed);
+      Vector2 newVector = PolarToCoorVector2(deg, speed);
       genes[i] = newVector;
     }
     fitness = 1;
