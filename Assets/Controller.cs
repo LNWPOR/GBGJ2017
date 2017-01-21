@@ -56,11 +56,11 @@ public class Controller : Character {
     } else {
       player.velocity = new Vector3(x, 0, z).normalized * speed;
     }
-        
+
         Plane playerPlane = new Plane(Vector3.up, transform.position);
     	Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
     	float hitdist = 0.0f;
-    	if (playerPlane.Raycast (ray, out hitdist)) 
+    	if (playerPlane.Raycast (ray, out hitdist))
 		{
         	Vector3 targetPoint = ray.GetPoint(hitdist);
         	Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
@@ -73,7 +73,6 @@ public class Controller : Character {
     void soundBeat()
     {
         float DisPlaAI = Vector3.Distance(player.transform.position, AI.transform.position);
-        Debug.Log(DisPlaAI);
         if (DisPlaAI > 20)
         {
             heartsound.pitch = 1;
