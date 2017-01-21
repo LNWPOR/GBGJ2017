@@ -22,7 +22,6 @@ public class Character : MonoBehaviour {
 
   public void GenerateSound(bool isSecondhand, float lifespan) {
     float degStep = 360f / soundwaveCount;
-    Debug.Log(lifespan);
     for (float deg = 0; deg < 360f; deg += degStep) {
       GenerateSoundParticle(PolarToCoorVector3(deg, 1), isSecondhand, lifespan);
     }

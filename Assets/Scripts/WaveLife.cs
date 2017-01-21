@@ -52,6 +52,9 @@ public class WaveLife : MonoBehaviour {
         AI aiControllerScript = other.gameObject.GetComponent<AI>();
         aiControllerScript.GenerateSound(true, 20f);
       }
+      // if (sourceTag == "Player") {
+      //   aiControllerScript.UpdateLastKnownPosition();
+      // }
       Destroy(gameObject);
     }
   }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 public class DNA {
-  public static int size = 10;
+  public static int size = 6;
   public Vector2[] genes = new Vector2[size];
   public float fitness;
   public bool isKilledPlayer = false;
@@ -21,7 +21,8 @@ public class DNA {
     float degLimit = 180;
     for (int i = 0; i < size; i++) {
       float deg = Random.Range(angle - degLimit / 2, angle + degLimit / 2);
-      genes[i] = PolarToCoorVector2(deg, AI.scale);
+      Vector2 newVector = PolarToCoorVector2(deg, AI.speed);
+      genes[i] = newVector;
     }
     fitness = 1;
   }
@@ -33,7 +34,6 @@ public class DNA {
     Debug.Log("DNA fitness: " + newFitness);
     fitness = newFitness;
     if (isKilledPlayer) {
-      Debug.Log("KILLED!!");
       fitness *= 10;
     }
   }
@@ -41,36 +41,45 @@ public class DNA {
   Vector2 PolarToCoorVector2(float degrees, float r)
   {
     float radians = degrees * Mathf.Deg2Rad;
-    return new Vector2(r * Mathf.Sin(radians), r * Mathf.Cos(radians));
+    return new Vector2(r * Mathf.Cos(radians), r * Mathf.Sin(radians));
   }
 
-  private float AngleBetweenVector2(Vector2 vec1, Vector2 vec2)
+  public static float AngleBetweenVector2(Vector2 vec1, Vector2 vec2)
   {
-    Vector2 diference = vec2 - vec1;
+    Vector2 diff = vec2 - vec1;
     float sign = (vec2.y < vec1.y)? -1.0f : 1.0f;
-    return Vector2.Angle(Vector2.right, diference) * sign;
+    return Vector2.Angle(Vector2.right, diff) * sign;
   }
 }
 
 public class AI : Character {
   public static int size = 10;
+  public GameObject player;
 
-  private List<DNA> dna = new List<DNA>();
+  // private List<DNA> dna = new List<DNA>();
   private DNA currentDNA;
   private Vector3 defaultPosition;
   private int timeSinceLastJump = 0;
   private int timeJumped = 0;
 
-  public Vector3 playerLastKnownPosition;
-  public static float scale = 4f;
-  public static int degStep = 72;
+  private Vector3 playerLastKnownPosition;
+  public static float speed = 2.5f;
+  public static int jumpInterval = 10;
+  public static int degStep = 20;
   public static float rangeClose = 12f;
+
+  private List<DNA>[,] dnaLegacy = new List<DNA>[degStep,2];
+  private int currentDegRegion = 0;
+  private int currentRangeRegion = 0;
 
 	// Use this for initialization
 	public override void Start () {
     base.Start();
+    UpdatePlayerLastKnownPosition(player.transform.position);
     Debug.Log("ai position: " + transform.position);
     Debug.Log("player position: " + playerLastKnownPosition);
+    InitDNALegacy();
+    FindRegion();
     currentDNA = new DNA(transform.position, playerLastKnownPosition);
     defaultPosition = transform.position;
     tag = "AI";
@@ -79,7 +88,7 @@ public class AI : Character {
 	// Update is called once per frame
 	public override void Update () {
     base.Update();
-    if (timeSinceLastJump == 40) {
+    if (timeSinceLastJump == jumpInterval) {
       // for (int i = 0; i < currentDNA.genes.Length; i++) {
       Jump();
       // }
@@ -89,7 +98,15 @@ public class AI : Character {
     }
 	}
 
-  void updatePlayerLastKnowPosition(Vector3 pos) {
+  void InitDNALegacy() {
+    for (int i = 0; i < degStep; i++) {
+      for (int j = 0; j < 2; j++) {
+        dnaLegacy[i,j] = new List<DNA>();
+      }
+    }
+  }
+
+  void UpdatePlayerLastKnownPosition(Vector3 pos) {
     playerLastKnownPosition = pos;
   }
 
@@ -97,14 +114,14 @@ public class AI : Character {
     if (CanKillPlayer()) {
       currentDNA.isKilledPlayer = true;
     } else {
-      if (timeJumped < currentDNA.genes.Length) {
+      if (timeJumped < DNA.size) {
         Vector2 gene = currentDNA.genes[timeJumped];
         transform.position = transform.position + new Vector3(gene.x, 0, gene.y);
         timeJumped++;
         base.GenerateSound(false, 40f);
       } else {
+        UpdatePlayerLastKnownPosition(player.transform.position);
         currentDNA = GenerateNewDNA();
-        transform.position = defaultPosition;
         timeJumped = 0;
       }
     }
@@ -112,13 +129,13 @@ public class AI : Character {
 
   bool CanKillPlayer() {
     float distance = Vector3.Distance(transform.position, playerLastKnownPosition);
-    return distance < AI.scale / 2;
+    return distance < AI.speed / 2;
   }
 
   public DNA Crossover(DNA a, DNA b) {
-    int mid = Random.Range(0, size - 1);
-    Vector2[] newGenes = new Vector2[size];
-    for (int i = 0; i < size; i++) {
+    int mid = Random.Range(0, DNA.size - 1);
+    Vector2[] newGenes = new Vector2[DNA.size];
+    for (int i = 0; i < DNA.size; i++) {
       if (i < mid) {
         newGenes[i] = a.genes[i];
       } else {
@@ -128,8 +145,28 @@ public class AI : Character {
     return new DNA(newGenes);
   }
 
+  void FindRegion() {
+    float distance = Vector3.Distance(transform.position, playerLastKnownPosition);
+    int rangeRegion;
+    if (distance <= rangeClose) {
+      rangeRegion = 0;
+    } else {
+      rangeRegion = 1;
+    }
+    Vector2 aiPos = new Vector2(transform.position.x, transform.position.z);
+    Vector2 playerPos = new Vector2(playerLastKnownPosition.x, playerLastKnownPosition.z);
+    float angle = DNA.AngleBetweenVector2(aiPos, playerPos);
+    int degRegion = Mathf.FloorToInt((angle + 360) % 360 / degStep);
+    currentRangeRegion = rangeRegion;
+    currentDegRegion = degRegion;
+    Debug.Log("Current range region: " + currentRangeRegion);
+    Debug.Log("Current deg region: " + currentDegRegion);
+  }
+
   DNA GenerateNewDNA() {
     currentDNA.CalculateFitness(transform.position, playerLastKnownPosition);
+    List<DNA> dna = dnaLegacy[currentDegRegion,currentRangeRegion];
+    Debug.Log("dna count: " + dna.Count);
     // Remove less fit dna
     if (dna.Count == size) {
       int lessFitIndex = 0;
@@ -146,6 +183,10 @@ public class AI : Character {
     } else {
       dna.Add(currentDNA);
     }
+    dnaLegacy[currentDegRegion,currentRangeRegion] = dna;
+
+    FindRegion();
+    dna = dnaLegacy[currentDegRegion,currentRangeRegion];
     // Mating
     List<DNA> matingPool = new List<DNA>();
     for (int i = 0; i < dna.Count; i++) {
@@ -165,6 +206,7 @@ public class AI : Character {
       DNA parentB = matingPool[indexB];
       return Crossover(parentA, parentB);
     } else {
+      Debug.Log("GOGO new dna!");
       return new DNA(transform.position, playerLastKnownPosition);
     }
   }
