@@ -11,7 +11,7 @@ public class WaveLife : MonoBehaviour {
 
 	void Start () {
     life = 0;
-        Debug.Log(GetComponent<TrailRenderer>().materials[0].color.r);
+    // Debug.Log(GetComponent<TrailRenderer>().materials[0].color.r);
 	}
 
 	// Update is called once per frame
@@ -41,10 +41,9 @@ public class WaveLife : MonoBehaviour {
 
   void OnTriggerEnter(Collider other) {
     if (other.gameObject.tag.Equals(sourceTag)) return;
-    if (!other.gameObject.tag.Equals("Untagged")) Debug.Log(other.gameObject.tag);
     if (other.gameObject.tag.Equals("Item")) {
       ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
-      if (!isWaveSecondhand && itemControllerScript.IsResonanceable()) {
+      if (!isWaveSecondhand && itemControllerScript.IsResonanceable() && sourceTag == "Player") {
         itemControllerScript.GenerateSound(true, 20f);
       }
       Destroy(gameObject);
@@ -57,11 +56,10 @@ public class WaveLife : MonoBehaviour {
     } else if (other.gameObject.tag.Equals("AI")) {
       AI aiControllerScript = other.gameObject.GetComponent<AI>();
       if (!aiControllerScript.IsOnTheFloor()) return;
-      if (!isWaveSecondhand && aiControllerScript.IsResonanceable()) {
-        aiControllerScript.GenerateSound(true, 200f);
-      }
       if (sourceTag == "Player") {
         aiControllerScript.UpdatePlayerLastKnownPosition(sourcePosition);
+      } else if (!isWaveSecondhand && aiControllerScript.IsResonanceable()) {
+        aiControllerScript.GenerateSound(true, 200f);
       }
       Destroy(gameObject);
     }

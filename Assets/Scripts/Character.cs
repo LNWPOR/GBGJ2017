@@ -51,6 +51,7 @@ public class Character : MonoBehaviour {
     b = list.GetComponent<TrailRenderer>();
     b.materials[0].color = myColor;
     WaveLife controller = list.GetComponent<WaveLife>();
+    controller.SetSourcePosition(transform.position);
     controller.SetLifespan(lifespan);
     controller.SetSourceTag(tag);
     controller.SetIsSecondhand(isSecondhand);

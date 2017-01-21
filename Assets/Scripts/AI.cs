@@ -122,6 +122,7 @@ public class AI : Character {
 
   public void UpdatePlayerLastKnownPosition(Vector3 pos) {
     label = "I KNOW WHERE YOU ARE";
+    Debug.Log(pos);
     playerLastKnownPosition = pos;
     currentDNA = GenerateNewDNA();
     timeSinceLastJump = beforeJumpInterval;
@@ -129,7 +130,7 @@ public class AI : Character {
   }
 
   void Jump() {
-    if (timeJumped < DNA.size) {
+    if (timeJumped < currentDNA.genes.Length - 1) {
       timeJumped++;
       base.GenerateSound(false, 40f);
     } else {
