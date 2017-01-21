@@ -72,7 +72,6 @@ public class AI : Character {
   private List<DNA>[,] dnaLegacy = new List<DNA>[degStep,2];
   private int currentDegRegion = 0;
   private int currentRangeRegion = 0;
-  private string label;
   public bool isOnTheFloor = true;
   private bool isAddedScene = false;
 
@@ -84,16 +83,15 @@ public class AI : Character {
     FindRegion();
     currentDNA = new DNA(transform.position, playerLastKnownPosition);
     defaultPosition = transform.position;
-    GetComponent<Renderer>().enabled = false;
+    // GetComponent<Renderer>().enabled = false;
     tag = "AI";
-    label = "Run!";
 	}
 
 	// Update is called once per frame
 	public override void Update () {
     base.Update();
     if (isAddedScene) return;
-    if (isOnTheFloor && CanKillPlayer()) return;
+    if (CanKillPlayer()) return;
     if (timeSinceLastJump == jumpInterval) {
       Jump();
       timeSinceLastJump = 0;
@@ -130,15 +128,7 @@ public class AI : Character {
     }
   }
 
-  void OnGUI() {
-    if (!isAddedScene) {
-      GUI.Label(new Rect(10, 40, 200, 50), label);
-    }
-  }
-
   public void UpdatePlayerLastKnownPosition(Vector3 pos) {
-    label = "I KNOW WHERE YOU ARE";
-    Debug.Log(pos);
     playerLastKnownPosition = pos;
     currentDNA = GenerateNewDNA();
     timeSinceLastJump = beforeJumpInterval;
@@ -156,10 +146,11 @@ public class AI : Character {
     }
   }
 
-  bool CanKillPlayer() {
+  public bool CanKillPlayer() {
+    if (!isOnTheFloor) return false;
     float distance = Vector3.Distance(transform.position, player.transform.position);
     if (distance < 1.2f) {
-      label = "YOU ARE DEAD";
+      Debug.Log("DIST: " + distance);
       if (!isAddedScene) {
         SceneManager.LoadScene("Result");
         isAddedScene = true;
