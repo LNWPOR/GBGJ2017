@@ -18,7 +18,7 @@ public class DNA {
     Vector2 aiPos = new Vector2(ai.x, ai.z);
     Vector2 playerPos = new Vector2(player.x, player.z);
     float angle = AngleBetweenVector2(aiPos, playerPos);
-    float degLimit = 120;
+    float degLimit = 180;
     for (int i = 0; i < size; i++) {
       float deg = Random.Range(angle - degLimit / 2, angle + degLimit / 2);
       Vector2 newVector = PolarToCoorVector2(deg, AI.speed);
@@ -122,6 +122,7 @@ public class AI : Character {
 
   public void UpdatePlayerLastKnownPosition(Vector3 pos) {
     label = "I KNOW WHERE YOU ARE";
+    Debug.Log(pos);
     playerLastKnownPosition = pos;
     currentDNA = GenerateNewDNA();
     timeSinceLastJump = beforeJumpInterval;
@@ -129,7 +130,7 @@ public class AI : Character {
   }
 
   void Jump() {
-    if (timeJumped < DNA.size) {
+    if (timeJumped < currentDNA.genes.Length - 1) {
       timeJumped++;
       base.GenerateSound(false, 40f);
     } else {

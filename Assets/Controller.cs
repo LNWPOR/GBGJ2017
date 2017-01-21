@@ -47,7 +47,7 @@ public class Controller : Character {
     }
   }
 
-  void OnCollisionStay(Collision other) {
+  void OnTriggerStay(Collider other) {
     if (other.gameObject.tag.Equals("Item"))
     {
       float damage = 5;
