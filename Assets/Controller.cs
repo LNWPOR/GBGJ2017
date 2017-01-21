@@ -36,7 +36,7 @@ public class Controller : Character {
     if (isMove == 20) {
             int randomFootstep = Random.Range(0, NumSound);
             sound.PlayOneShot(footstep[randomFootstep], 1);
-      base.GenerateSound(false, 30f);
+      base.GenerateSound(false, 300f);
     }
     if (isMove > 20) {
       isMove += 1;
@@ -54,7 +54,7 @@ public class Controller : Character {
       ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
       if (Input.GetKeyDown("space"))
       {
-        base.GenerateSound(true, 30f);
+        base.GenerateSound(true, 300f);
         itemControllerScript.Pull(5);
       }
     }

@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class WaveLife : MonoBehaviour {
   float life;
-  private float lifespan = 30f;
+  private float lifespan = 300f;
   private string sourceTag;
   public bool isWaveSecondhand;
 
 	void Start () {
     life = 0;
+        Debug.Log(GetComponent<TrailRenderer>().materials[0].color.r);
 	}
 
 	// Update is called once per frame
@@ -38,19 +39,19 @@ public class WaveLife : MonoBehaviour {
     if (other.gameObject.tag.Equals("Item")) {
       if (!isWaveSecondhand) {
         ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
-        itemControllerScript.GenerateSound(true, 20f);
+        itemControllerScript.GenerateSound(true, 200f);
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("Player")) {
       if (!isWaveSecondhand) {
         Controller playerControllerScript = other.gameObject.GetComponent<Controller>();
-        playerControllerScript.GenerateSound(true, 20f);
+        playerControllerScript.GenerateSound(true, 200f);
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("AI")) {
       if (!isWaveSecondhand) {
         AI aiControllerScript = other.gameObject.GetComponent<AI>();
-        aiControllerScript.GenerateSound(true, 20f);
+        aiControllerScript.GenerateSound(true, 200f);
       }
       Destroy(gameObject);
     }
