@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WaveLife : MonoBehaviour {
-  float life;
+  private float life;
   private float lifespan = 300f;
   private string sourceTag;
   public bool isWaveSecondhand;
@@ -17,7 +17,9 @@ public class WaveLife : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
     life += 1;
-    GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 1f - (life / lifespan));
+    Color fadedColor = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 1f - (life / lifespan));
+    GetComponent<Renderer>().material.color = fadedColor;
+    GetComponent<TrailRenderer>().materials[0].color = fadedColor;
     if (life >= lifespan) {
       Destroy(gameObject);
     }
