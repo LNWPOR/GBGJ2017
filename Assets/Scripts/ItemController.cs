@@ -16,12 +16,13 @@ public class ItemController : Character {
   public override void Start () {
     base.Start();
     itemCurrentHP = itemStartHP;
-    itemStartColorR = GetComponent<Renderer>().material.color.r;
-    itemStartColorG = GetComponent<Renderer>().material.color.g;
-    itemStartColorB = GetComponent<Renderer>().material.color.b;
+        
+    itemStartColorR = GetComponent<SpriteRenderer>().color.r;
+    itemStartColorG = GetComponent<SpriteRenderer>().color.g;
+    itemStartColorB = GetComponent<SpriteRenderer>().color.b;
 
     myColor = new Color(itemStartColorR, itemStartColorG, itemStartColorB, 1);
-    GetComponent<Renderer>().enabled = false;
+    GetComponent<SpriteRenderer>().enabled = false;
     tag = "Item";
   }
 
@@ -29,10 +30,10 @@ public class ItemController : Character {
     base.Update();
     if (timeGotHit > 0) timeGotHit--;
     else {
-      GetComponent<Renderer>().enabled = false;
+      GetComponent<SpriteRenderer>().enabled = false;
     }
     float fadingRate = timeGotHit / fadeOutTime;
-    GetComponent<Renderer>().material.color = new Color(itemStartColorR * fadingRate, itemStartColorG * fadingRate, itemStartColorB * fadingRate, fadingRate);
+    GetComponent<SpriteRenderer>().material.color = new Color(itemStartColorR * fadingRate, itemStartColorG * fadingRate, itemStartColorB * fadingRate, fadingRate);
   }
 
   public void Pull(float damage)
@@ -54,7 +55,7 @@ public class ItemController : Character {
 
   public void GetHitByWave() {
     timeGotHit = fadeOutTime;
-    GetComponent<Renderer>().enabled = true;
+    GetComponent<SpriteRenderer>().enabled = true;
   }
 
   private void CalculateCurrentColor(float itemCurrentHP) {
