@@ -50,7 +50,7 @@ public class Controller : Character {
     else {
       isRunning = false;
       isMove = 0;
-      splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
+      splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
       player.velocity = new Vector3(0, 0, 0);
     }
     if (isMove >= 5) {
