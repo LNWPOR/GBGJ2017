@@ -2,17 +2,21 @@
 using System.Collections;
 
 public class Controller : Character {
-  public Rigidbody player;
+    public Rigidbody player;
+    public GameObject AI;
   public float speed;
     public int NumSound = 6;
   int isMove;
-    public AudioSource sound;
+    public AudioSource sound, heartsound;
     public AudioClip[] footstep;
+    public GameObject splashstep;
+
 
   public override void Start() {
     base.Start();
     isMove = 0;
     tag = "Player";
+    LevelDis = 5;
   }
 
 
@@ -31,8 +35,16 @@ public class Controller : Character {
     if (Input.GetKey("d")) {
       x = 1;
     }
-    if (z != 0 || x != 0) isMove += 1;
-    else isMove = 0;
+        if (z != 0 || x != 0)
+        {
+            isMove += 1;
+            splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.5f;
+        }
+        else
+        {
+            isMove = 0;
+            splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0;
+        }
     if (isMove == 20) {
       int randomFootstep = Random.Range(0, NumSound);
       sound.PlayOneShot(footstep[randomFootstep], 1);
@@ -55,6 +67,16 @@ public class Controller : Character {
         	Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
         	transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
 		}
+
+        soundBeat();
+    }
+
+    void soundBeat()
+    {
+        float DisPlaAI = Vector3.Distance(player.transform.position, AI.transform.position);
+        Debug.Log(DisPlaAI);
+        if (DisPlaAI > 20) heartsound.pitch = 1;
+        else heartsound.pitch = 2 - (DisPlaAI / 20);
     }
 
   void OnTriggerStay(Collider other) {
