@@ -8,6 +8,8 @@ public class Controller : Character {
   int isMove;
     public AudioSource sound;
     public AudioClip[] footstep;
+    public GameObject splashstep;
+
 
   public override void Start() {
     base.Start();
@@ -31,8 +33,16 @@ public class Controller : Character {
     if (Input.GetKey("d")) {
       x = 1;
     }
-    if (z != 0 || x != 0) isMove += 1;
-    else isMove = 0;
+        if (z != 0 || x != 0)
+        {
+            isMove += 1;
+            splashstep.SetActive(true);
+        }
+        else
+        {
+            isMove = 0;
+            splashstep.SetActive(false);
+        }
     if (isMove == 20) {
       int randomFootstep = Random.Range(0, NumSound);
       sound.PlayOneShot(footstep[randomFootstep], 1);
