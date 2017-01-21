@@ -33,14 +33,14 @@ public class Controller : Character {
     }
     if (z != 0 || x != 0) isMove += 1;
     else isMove = 0;
-    if (isMove == 10) {
+    if (isMove == 20) {
             int randomFootstep = Random.Range(0, NumSound);
             sound.PlayOneShot(footstep[randomFootstep], 1);
       base.GenerateSound(false, 30f);
     }
-    if (isMove > 10) {
+    if (isMove > 20) {
       isMove += 1;
-      if (isMove == 20) isMove = 0;
+      if (isMove == 30) isMove = 0;
       player.velocity = new Vector3(0, 0, 0);
     } else {
       player.velocity = new Vector3(x, 0, z).normalized * speed;
