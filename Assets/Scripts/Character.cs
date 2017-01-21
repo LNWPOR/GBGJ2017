@@ -6,8 +6,10 @@ public class Character : MonoBehaviour {
   public GameObject wave;
   private float waveSpeed = 4f;
   public Color myColor;
-  private int soundwaveCount = 30;
+  private int soundwaveCount = 60;
   public string tag;
+  private float lastHitByWave = 0;
+  public float hitByWaveInterval = 20f;
 
 	// Use this for initialization
 	public virtual void Start () {
@@ -16,13 +18,16 @@ public class Character : MonoBehaviour {
 
 	// Update is called once per frame
 	public virtual void Update () {
-
+    lastHitByWave++;
 	}
 
+  public bool IsResonanceable() {
+    return lastHitByWave >= hitByWaveInterval;
+  }
 
   public void GenerateSound(bool isSecondhand, float lifespan) {
     float degStep = 360f / soundwaveCount;
-    Debug.Log(lifespan);
+    if (isSecondhand) lastHitByWave = 0;
     for (float deg = 0; deg < 360f; deg += degStep) {
       GenerateSoundParticle(PolarToCoorVector3(deg, 1), isSecondhand, lifespan);
     }

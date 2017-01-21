@@ -64,6 +64,7 @@ public class AI : Character {
   private Vector3 playerLastKnownPosition;
   public static float speed = 4f;
   public static int jumpInterval = 60;
+  public static int beforeJumpInterval = jumpInterval / 2;
   public static int degStep = 20;
   public static float rangeClose = 12f;
 
@@ -71,6 +72,7 @@ public class AI : Character {
   private int currentDegRegion = 0;
   private int currentRangeRegion = 0;
   private string label;
+  public bool isOnTheFloor = true;
 
 	// Use this for initialization
 	public override void Start () {
@@ -87,11 +89,22 @@ public class AI : Character {
 	// Update is called once per frame
 	public override void Update () {
     base.Update();
+    if (isOnTheFloor && CanKillPlayer()) return;
     if (timeSinceLastJump == jumpInterval) {
       Jump();
       timeSinceLastJump = 0;
+      defaultPosition = transform.position;
+      isOnTheFloor = true;
     } else {
       timeSinceLastJump++;
+      if (timeSinceLastJump >= beforeJumpInterval) {
+        isOnTheFloor = false;
+        Vector2 gene = currentDNA.genes[timeJumped];
+        int time = timeSinceLastJump - beforeJumpInterval;
+        float fracJourney = time * 1f / (jumpInterval - beforeJumpInterval);
+        Vector3 targetPosition = defaultPosition + new Vector3(gene.x, 0, gene.y);
+        transform.position = Vector3.Lerp(defaultPosition, targetPosition, fracJourney);
+      }
     }
 	}
 
@@ -111,21 +124,17 @@ public class AI : Character {
     label = "I KNOW WHERE YOU ARE";
     playerLastKnownPosition = pos;
     currentDNA = GenerateNewDNA();
+    timeSinceLastJump = 0;
     timeJumped = 0;
   }
 
   void Jump() {
-    if (CanKillPlayer()) {
-      currentDNA.isKilledPlayer = true;
+    if (timeJumped < DNA.size) {
+      timeJumped++;
+      base.GenerateSound(false, 40f);
     } else {
-      if (timeJumped < DNA.size) {
-        Vector2 gene = currentDNA.genes[timeJumped];
-        transform.position = transform.position + new Vector3(gene.x, 0, gene.y);
-        timeJumped++;
-        base.GenerateSound(false, 40f);
-      } else {
-        UpdatePlayerLastKnownPosition(player.transform.position);
-      }
+      timeJumped = 0;
+      UpdatePlayerLastKnownPosition(player.transform.position);
     }
   }
 
@@ -150,6 +159,10 @@ public class AI : Character {
       }
     }
     return new DNA(newGenes);
+  }
+
+  public bool IsOnTheFloor() {
+    return isOnTheFloor;
   }
 
   void FindRegion() {

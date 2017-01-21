@@ -40,21 +40,23 @@ public class WaveLife : MonoBehaviour {
 
   void OnTriggerEnter(Collider other) {
     if (other.gameObject.tag.Equals(sourceTag)) return;
+    if (!other.gameObject.tag.Equals("Untagged")) Debug.Log(other.gameObject.tag);
     if (other.gameObject.tag.Equals("Item")) {
-      if (!isWaveSecondhand) {
-        ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
+      ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
+      if (!isWaveSecondhand && itemControllerScript.IsResonanceable()) {
         itemControllerScript.GenerateSound(true, 20f);
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("Player")) {
-      if (!isWaveSecondhand) {
-        Controller playerControllerScript = other.gameObject.GetComponent<Controller>();
+      Controller playerControllerScript = other.gameObject.GetComponent<Controller>();
+      if (!isWaveSecondhand && playerControllerScript.IsResonanceable()) {
         playerControllerScript.GenerateSound(true, 20f);
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("AI")) {
       AI aiControllerScript = other.gameObject.GetComponent<AI>();
-      if (!isWaveSecondhand) {
+      if (!aiControllerScript.IsOnTheFloor()) return;
+      if (!isWaveSecondhand && aiControllerScript.IsResonanceable()) {
         aiControllerScript.GenerateSound(true, 20f);
       }
       if (sourceTag == "Player") {
