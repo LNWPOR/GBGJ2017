@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class WaveLife : MonoBehaviour {
   float life;
-  private float lifespan = 30f;
+  private float lifespan = 300f;
   private string sourceTag;
   public bool isWaveSecondhand;
   private Vector3 sourcePosition;
 
 	void Start () {
     life = 0;
+        Debug.Log(GetComponent<TrailRenderer>().materials[0].color.r);
 	}
 
 	// Update is called once per frame
@@ -57,7 +58,7 @@ public class WaveLife : MonoBehaviour {
       AI aiControllerScript = other.gameObject.GetComponent<AI>();
       if (!aiControllerScript.IsOnTheFloor()) return;
       if (!isWaveSecondhand && aiControllerScript.IsResonanceable()) {
-        aiControllerScript.GenerateSound(true, 20f);
+        aiControllerScript.GenerateSound(true, 200f);
       }
       if (sourceTag == "Player") {
         aiControllerScript.UpdatePlayerLastKnownPosition(sourcePosition);

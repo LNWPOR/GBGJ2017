@@ -14,6 +14,7 @@ public class Character : MonoBehaviour {
 	// Use this for initialization
 	public virtual void Start () {
     GetComponent<Renderer>().material.color = myColor;
+
 	}
 
 	// Update is called once per frame
@@ -47,6 +48,8 @@ public class Character : MonoBehaviour {
     a.velocity = soundVector * waveSpeed;
     b = list.GetComponent<Renderer>();
     b.material.color = myColor;
+        b = list.GetComponent<TrailRenderer>();
+        b.materials[0].color = myColor;
     WaveLife controller = list.GetComponent<WaveLife>();
     controller.SetLifespan(lifespan);
     controller.SetSourceTag(tag);
