@@ -13,7 +13,8 @@ public class Character : MonoBehaviour {
 
 	// Use this for initialization
 	public virtual void Start () {
-	}
+        
+    }
 
 	// Update is called once per frame
 	public virtual void Update () {
@@ -57,4 +58,5 @@ public class Character : MonoBehaviour {
     controller.SetSourceTag(tag);
     controller.SetIsSecondhand(isSecondhand);
   }
+
 }
