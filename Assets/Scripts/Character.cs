@@ -43,6 +43,7 @@ public class Character : MonoBehaviour {
     b.material.color = myColor;
     WaveLife controller = list.GetComponent<WaveLife>();
     controller.SetLifespan(lifespan);
+    controller.SetSourcePosition(transform.position);
     controller.SetSourceTag(tag);
     controller.SetIsSecondhand(isSecondhand);
   }

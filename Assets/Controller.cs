@@ -4,10 +4,10 @@ using System.Collections;
 public class Controller : Character {
   public Rigidbody player;
   public float speed;
-    public int NumSound = 6;
+  public int NumSound = 6;
   int isMove;
-    public AudioSource sound;
-    public AudioClip[] footstep;
+  public AudioSource sound;
+  public AudioClip[] footstep;
 
   public override void Start() {
     base.Start();
@@ -34,13 +34,13 @@ public class Controller : Character {
     if (z != 0 || x != 0) isMove += 1;
     else isMove = 0;
     if (isMove == 10) {
-            int randomFootstep = Random.Range(0, NumSound);
-            sound.PlayOneShot(footstep[randomFootstep], 1);
       base.GenerateSound(false, 30f);
+      // int randomFootstep = Random.Range(0, NumSound - 1);
+      // sound.PlayOneShot(footstep[randomFootstep], 1);
     }
-    if (isMove > 10) {
+    if (isMove > 20) {
       isMove += 1;
-      if (isMove == 20) isMove = 0;
+      if (isMove == 30) isMove = 0;
       player.velocity = new Vector3(0, 0, 0);
     } else {
       player.velocity = new Vector3(x, 0, z).normalized * speed;
@@ -54,7 +54,7 @@ public class Controller : Character {
       ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
       if (Input.GetKeyDown("space"))
       {
-        base.GenerateSound(true, 30f);
+        base.GenerateSound(true, 90f);
         itemControllerScript.Pull(5);
       }
     }
