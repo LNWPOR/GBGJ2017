@@ -48,6 +48,9 @@ public class WaveLife : MonoBehaviour {
       if (!isWaveSecondhand && itemControllerScript.IsResonanceable() && sourceTag == "Player") {
         itemControllerScript.GenerateSound(true, 20f);
       }
+      if (sourceTag == "Player") {
+        itemControllerScript.GetHitByWave();
+      }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("Player")) {
       Controller playerControllerScript = other.gameObject.GetComponent<Controller>();

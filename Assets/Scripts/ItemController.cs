@@ -10,6 +10,8 @@ public class ItemController : Character {
   private float itemStartColorG;
   private float itemStartColorB;
   public GameObject mainCamera;
+  private float timeGotHit = 0;
+  private float fadeOutTime = 8f;
 
   public override void Start () {
     base.Start();
@@ -18,20 +20,28 @@ public class ItemController : Character {
     itemStartColorG = GetComponent<Renderer>().material.color.g;
     itemStartColorB = GetComponent<Renderer>().material.color.b;
 
-    myColor = GetComponent<Renderer>().material.color;
-    // base.GenerateSound();
+    myColor = new Color(itemStartColorR, itemStartColorG, itemStartColorB, 1);
+    GetComponent<Renderer>().enabled = false;
     tag = "Item";
+  }
+
+  public override void Update() {
+    base.Update();
+    if (timeGotHit > 0) timeGotHit--;
+    else {
+      GetComponent<Renderer>().enabled = false;
+    }
+    float fadingRate = timeGotHit / fadeOutTime;
+    GetComponent<Renderer>().material.color = new Color(itemStartColorR * fadingRate, itemStartColorG * fadingRate, itemStartColorB * fadingRate, fadingRate);
   }
 
   public void Pull(float damage)
   {
-    if (itemCurrentHP - damage > 0)
-    {
+    if (itemCurrentHP - damage > 0) {
       itemCurrentHP = itemCurrentHP - damage;
       CalculateCurrentColor(itemCurrentHP);
     }
-    else
-    {
+    else {
       itemCurrentHP = 0;
       CalculateCurrentColor(itemCurrentHP);
       mainCamera.GetComponent<CameraController>().ZoomOutStep2();
@@ -39,11 +49,13 @@ public class ItemController : Character {
     }
   }
 
-  private void CalculateCurrentColor(float itemCurrentHP)
-  {
+  public void GetHitByWave() {
+    timeGotHit = fadeOutTime;
+    GetComponent<Renderer>().enabled = true;
+  }
+
+  private void CalculateCurrentColor(float itemCurrentHP) {
     float percentCurrentHP = itemCurrentHP / itemStartHP;
-    GetComponent<Renderer>().material.color = new Color(itemStartColorR * percentCurrentHP,
-                                                        itemStartColorG * percentCurrentHP,
-                                                        itemStartColorB * percentCurrentHP);
+    // GetComponent<Renderer>().material.color = new Color(itemStartColorR, itemStartColorG, itemStartColorB, percentCurrentHP);
   }
 }

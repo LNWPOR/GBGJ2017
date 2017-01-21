@@ -18,7 +18,7 @@ public class DNA {
     Vector2 aiPos = new Vector2(ai.x, ai.z);
     Vector2 playerPos = new Vector2(player.x, player.z);
     float angle = AngleBetweenVector2(aiPos, playerPos);
-    float degLimit = 120;
+    float degLimit = 180;
     for (int i = 0; i < size; i++) {
       float deg = Random.Range(angle - degLimit / 2, angle + degLimit / 2);
       Vector2 newVector = PolarToCoorVector2(deg, AI.speed);
