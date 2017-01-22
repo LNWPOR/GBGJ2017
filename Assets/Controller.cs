@@ -21,6 +21,8 @@ public class Controller : Character {
   private float divingCooldownCount;
   private float divingCooldown = 200f;
 
+  private float waveLifespan = 30f;
+
     private bool isPulling = false;
     public float pullingCooldown = 1f;
     ItemController itemControllerScript;
@@ -71,16 +73,7 @@ public class Controller : Character {
       } else {
         isDiving = false;
         if (!isCtrlDown) timeAfterDiving = 0f;
-        // if (isMove == 0) {
-        //   base.GenerateSound(false, 4f);
-        //   player.velocity = new Vector3(x, 0, z).normalized * speed;
-        //   splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
-        // }
-        // if (isRunning) {
-        //   splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
-        //   player.velocity = new Vector3(x, 0, z).normalized * speed * 2f;
-        // }
-        if (isMove == 0) base.GenerateSound(false, 50f);
+        if (isMove == 0) base.GenerateSound(false, waveLifespan);
         splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
         player.velocity = new Vector3(x, 0, z).normalized * speed * 2f;
         isMove += 1;
@@ -100,7 +93,7 @@ public class Controller : Character {
     if (isMove >= stepInterval) {
       int randomFootstep = Random.Range(0, NumSound);
       sound.PlayOneShot(footstep[randomFootstep], 1);
-      base.GenerateSound(false, 50f);
+      base.GenerateSound(false, waveLifespan);
       isMove = 1;
     }
     Plane playerPlane = new Plane(Vector3.up, transform.position);
