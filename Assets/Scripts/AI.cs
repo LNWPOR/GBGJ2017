@@ -165,7 +165,8 @@ public class AI : Character {
       base.GenerateSound(false, 50f);
     } else {
       timeJumped = 0;
-      UpdatePlayerLastKnownPosition(player.transform.position);
+      // UpdatePlayerLastKnownPosition(player.transform.position);
+      currentDNA = GenerateNewDNA();
       base.GenerateSound(false, 50f);
     }
   }
