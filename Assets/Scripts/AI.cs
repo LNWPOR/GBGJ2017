@@ -9,6 +9,8 @@ public class DNA {
   public float fitness;
   public bool isKilledPlayer = false;
 
+
+
   public DNA (Vector2[] newGenes) {
     genes = newGenes;
     fitness = 1;
@@ -55,6 +57,9 @@ public class DNA {
 public class AI : Character {
   public static int size = 10;
   public GameObject player;
+  public GameObject splashstep;
+  public AudioSource sound;
+  public AudioClip[] footstep;
   private Controller playerScript;
 
   // private List<DNA> dna = new List<DNA>();
@@ -75,12 +80,14 @@ public class AI : Character {
   private int currentRangeRegion = 0;
   public bool isOnTheFloor = true;
   private bool isAddedScene = false;
+  private bool killedPlayer = false;
 
 	// Use this for initialization
 	public override void Start () {
     base.Start();
     if (AI.dnaLegacy == null) AI.dnaLegacy = new List<DNA>[degStep,2];
     tag = "AI";
+    killedPlayer = false;
     playerLastKnownPosition = player.transform.position;
     InitDNALegacy();
     FindRegion();
@@ -93,8 +100,8 @@ public class AI : Character {
 	// Update is called once per frame
 	public override void Update () {
     base.Update();
+    if (killedPlayer) return;
     if (isAddedScene) return;
-    if (CanKillPlayer()) return;
     if (timeSinceLastJump == jumpInterval) {
       Jump();
       timeSinceLastJump = 0;
@@ -102,6 +109,7 @@ public class AI : Character {
       isOnTheFloor = true;
     } else {
       timeSinceLastJump++;
+      splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
       if (timeSinceLastJump >= beforeJumpInterval) {
         isOnTheFloor = false;
         Vector2 gene = currentDNA.genes[timeJumped];
@@ -151,30 +159,32 @@ public class AI : Character {
   }
 
   void Jump() {
-    base.GenerateSound(false, 50f);
+    splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 5f;
     if (timeJumped < currentDNA.genes.Length - 1) {
+      int randomFootstep = Random.Range(0, 2);
+      sound.PlayOneShot(footstep[randomFootstep], 1);
       timeJumped++;
+      base.GenerateSound(false, 50f);
     } else {
       timeJumped = 0;
-      UpdatePlayerLastKnownPosition(player.transform.position);
+      // UpdatePlayerLastKnownPosition(player.transform.position);
+      currentDNA = GenerateNewDNA();
+      base.GenerateSound(false, 50f);
     }
   }
 
-  public bool CanKillPlayer() {
-    if (!isOnTheFloor) return false;
-    if (playerScript.IsDiving()) return false;
-    if (!player) return false;
-    float distance = Vector3.Distance(transform.position, player.transform.position);
-    if (distance < 1.2f) {
-      Debug.Log("DIST: " + distance);
-      if (!isAddedScene) {
-        SceneManager.LoadScene("Result");
-        isAddedScene = true;
-      }
-      return true;
-    } else {
-      return false;
+  public void KillPlayer() {
+    if (!isOnTheFloor) return;
+    if (playerScript.IsDiving()) return;
+    killedPlayer = true;
+    if (!isAddedScene) {
+      SceneManager.LoadScene("Result");
+      isAddedScene = true;
     }
+  }
+
+  public bool GetKilledPlayer() {
+    return killedPlayer;
   }
 
   public DNA Crossover(DNA a, DNA b) {
@@ -253,6 +263,13 @@ public class AI : Character {
       return Crossover(parentA, parentB);
     } else {
       return new DNA(transform.position, playerLastKnownPosition);
+    }
+  }
+
+  void OnTriggerEnter(Collider other) {
+    Debug.Log(other.gameObject.tag);
+    if (other.gameObject.tag.Equals("Player")) {
+      KillPlayer();
     }
   }
 }
