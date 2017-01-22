@@ -40,7 +40,8 @@ public class ItemController : Character {
 
   public void Pull(float damage)
   {
-
+        transform.parent.GetChild(1).gameObject.SetActive(true);
+        StartCoroutine(WaitPull(1f));
             if (itemCurrentHP - damage > 0)
             {
                 itemCurrentHP = itemCurrentHP - damage;
@@ -58,6 +59,15 @@ public class ItemController : Character {
             }
     
   }
+    private IEnumerator WaitPull(float time)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(time);
+            transform.parent.GetChild(1).gameObject.SetActive(false);
+        }
+    }
+
 
   public void GetHitByWave() {
     timeGotHit = fadeOutTime;
