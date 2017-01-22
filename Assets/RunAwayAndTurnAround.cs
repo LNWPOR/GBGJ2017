@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RunAwayAndTurnAround : MonoBehaviour {
-    float spinSpeed = 10f, itemSpeed = 2.4f;
+    public float spinSpeed = 10f, itemSpeed = 2.4f;
     public Rigidbody item;
 	// Use this for initialization
 	void Start () {
