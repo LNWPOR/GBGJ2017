@@ -4,6 +4,7 @@ using System.Collections;
 public class Controller : Character {
   public Rigidbody player;
   public GameObject AI;
+    public GameObject itemget;
   private AI aiScript;
   private Animator m_animator;
   public float speed;
@@ -135,15 +136,18 @@ public class Controller : Character {
       itemRunScript = other.gameObject.transform.parent.gameObject.GetComponent<RunAwayAndTurnAround>();
       if (Input.GetKeyDown("space") && !isPulling)
       {
-        // base.GenerateSound(true, 50f);
-        aiScript.UpdatePlayerLastKnownPosition(transform.position);
+        itemget.GetComponent<EllipsoidParticleEmitter>().maxSize = 1f;
+        itemget.transform.position = this.transform.position;
+                // base.GenerateSound(true, 50f);
+                aiScript.UpdatePlayerLastKnownPosition(transform.position);
         itemControllerScript.Pull(5);
         isPulling = true;
         itemRunScript.itemSpeed = itemRunScript.itemSpeedUp;
         StartCoroutine(WaitPulling(pullingCooldown));
       }
+        }
+       
     }
-  }
     private IEnumerator WaitPulling(float time)
     {
         while (true)
