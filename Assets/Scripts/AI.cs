@@ -9,8 +9,6 @@ public class DNA {
   public float fitness;
   public bool isKilledPlayer = false;
 
-
-
   public DNA (Vector2[] newGenes) {
     genes = newGenes;
     fitness = 1;
@@ -71,7 +69,7 @@ public class AI : Character {
 
   private Vector3 playerLastKnownPosition;
   public static float speed = 2f;
-  public static int jumpInterval = 40;
+  public static int jumpInterval = 20;
   public static int beforeJumpInterval = jumpInterval / 2;
   public static int degStep = 20;
   public static float rangeClose = 18f;
@@ -173,6 +171,7 @@ public class AI : Character {
     } else {
       timeJumped = 0;
       // UpdatePlayerLastKnownPosition(player.transform.position);
+      Debug.Log(transform.position + " :: " + playerLastKnownPosition);
       currentDNA = GenerateNewDNA();
       base.GenerateSound(false, 50f);
     }
@@ -182,6 +181,7 @@ public class AI : Character {
     if (!isOnTheFloor) return;
     if (playerScript.IsDiving()) return;
     killedPlayer = true;
+    GenerateNewDNA();
     if (!isAddedScene) {
       SceneManager.LoadScene("Result");
       isAddedScene = true;
@@ -192,7 +192,7 @@ public class AI : Character {
     return killedPlayer;
   }
 
-  public DNA Crossover(DNA a, DNA b) {
+  private DNA Crossover(DNA a, DNA b) {
     int mid = Random.Range(0, DNA.size - 1);
     Vector2[] newGenes = new Vector2[DNA.size];
     for (int i = 0; i < DNA.size; i++) {
@@ -202,6 +202,7 @@ public class AI : Character {
         newGenes[i] = b.genes[i];
       }
     }
+    Debug.Log("gene length: " + newGenes.Length);
     return new DNA(newGenes);
   }
 
@@ -272,7 +273,6 @@ public class AI : Character {
   }
 
   void OnTriggerEnter(Collider other) {
-    Debug.Log(other.gameObject.tag);
     if (other.gameObject.tag.Equals("Player")) {
       KillPlayer();
     }
