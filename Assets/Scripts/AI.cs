@@ -151,12 +151,11 @@ public class AI : Character {
   }
 
   void Jump() {
+    base.GenerateSound(false, 50f);
     if (timeJumped < currentDNA.genes.Length - 1) {
       timeJumped++;
-      base.GenerateSound(false, 50f);
     } else {
       timeJumped = 0;
-      base.GenerateSound(false, 50f);
       UpdatePlayerLastKnownPosition(player.transform.position);
     }
   }
