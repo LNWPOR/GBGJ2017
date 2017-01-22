@@ -23,6 +23,7 @@ public class Controller : Character {
     base.Start();
     isMove = 0;
     tag = "Player";
+    AI = GameObject.Find("AI");
     divingCooldownCount = divingCooldown;
   }
 
@@ -50,8 +51,7 @@ public class Controller : Character {
     } else {
       isCtrlDown = false;
     }
-    divingCooldownCount++;
-    Debug.Log("Diving cd: " + divingCooldownCount);
+    if (divingCooldownCount < divingCooldown) divingCooldownCount++;
     if (z != 0 || x != 0) {
       if (isCtrlDown && timeAfterDiving < timeAbleToDive && divingCooldownCount >= divingCooldown) {
         isDiving = true;

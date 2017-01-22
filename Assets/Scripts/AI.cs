@@ -70,7 +70,7 @@ public class AI : Character {
   public static int degStep = 20;
   public static float rangeClose = 18f;
 
-  private List<DNA>[,] dnaLegacy = new List<DNA>[degStep,2];
+  public static List<DNA>[,] dnaLegacy;
   private int currentDegRegion = 0;
   private int currentRangeRegion = 0;
   public bool isOnTheFloor = true;
@@ -79,6 +79,8 @@ public class AI : Character {
 	// Use this for initialization
 	public override void Start () {
     base.Start();
+    if (AI.dnaLegacy == null) AI.dnaLegacy = new List<DNA>[degStep,2];
+    tag = "AI";
     playerLastKnownPosition = player.transform.position;
     InitDNALegacy();
     FindRegion();
@@ -86,7 +88,6 @@ public class AI : Character {
     defaultPosition = transform.position;
     playerScript = player.GetComponent<Controller>();
     // GetComponent<Renderer>().enabled = false;
-    tag = "AI";
 	}
 
 	// Update is called once per frame
@@ -115,19 +116,31 @@ public class AI : Character {
 	}
 
   void Awake() {
-    DontDestroyOnLoad(gameObject);
+    player = GameObject.Find("Player");
+    LogLegacyCount();
   }
 
   public List<DNA>[,] GetDNALegacy() {
-    return dnaLegacy;
+    return AI.dnaLegacy;
   }
 
   void InitDNALegacy() {
     for (int i = 0; i < degStep; i++) {
       for (int j = 0; j < 2; j++) {
-        dnaLegacy[i,j] = new List<DNA>();
+        AI.dnaLegacy[i,j] = new List<DNA>();
       }
     }
+  }
+
+  void LogLegacyCount() {
+    if (AI.dnaLegacy == null) return;
+    int sumCount = 0;
+    for (int i = 0; i < degStep; i++) {
+      for (int j = 0; j < 2; j++) {
+        if (AI.dnaLegacy[i,j] != null) sumCount += AI.dnaLegacy[i,j].Count;
+      }
+    }
+    Debug.Log("Legacy count: " + sumCount);
   }
 
   public void UpdatePlayerLastKnownPosition(Vector3 pos) {
@@ -151,6 +164,7 @@ public class AI : Character {
   public bool CanKillPlayer() {
     if (!isOnTheFloor) return false;
     if (playerScript.IsDiving()) return false;
+    if (!player) return false;
     float distance = Vector3.Distance(transform.position, player.transform.position);
     if (distance < 1.2f) {
       Debug.Log("DIST: " + distance);
@@ -199,7 +213,7 @@ public class AI : Character {
 
   DNA GenerateNewDNA() {
     currentDNA.CalculateFitness(transform.position, playerLastKnownPosition);
-    List<DNA> dna = dnaLegacy[currentDegRegion,currentRangeRegion];
+    List<DNA> dna = AI.dnaLegacy[currentDegRegion,currentRangeRegion];
     // Remove less fit dna
     if (dna.Count == size) {
       int lessFitIndex = 0;
@@ -216,10 +230,10 @@ public class AI : Character {
     } else {
       dna.Add(currentDNA);
     }
-    dnaLegacy[currentDegRegion,currentRangeRegion] = dna;
+    AI.dnaLegacy[currentDegRegion,currentRangeRegion] = dna;
 
     FindRegion();
-    dna = dnaLegacy[currentDegRegion,currentRangeRegion];
+    dna = AI.dnaLegacy[currentDegRegion,currentRangeRegion];
     // Mating
     List<DNA> matingPool = new List<DNA>();
     for (int i = 0; i < dna.Count; i++) {
