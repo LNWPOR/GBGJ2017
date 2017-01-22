@@ -35,7 +35,9 @@ public class Controller : Character {
     isMove = 0;
     tag = "Player";
     AI = GameObject.Find("AI");
-    aiScript = AI.GetComponent<AI>();
+    if (AI != null) {
+      aiScript = AI.GetComponent<AI>();
+    }
 		m_animator = transform.GetChild(3).GetComponent<Animator> ();
     divingCooldownCount = divingCooldown;
   }
@@ -136,7 +138,7 @@ public class Controller : Character {
       if (Input.GetKeyDown("space") && !isPulling)
       {
         // base.GenerateSound(true, 50f);
-        aiScript.UpdatePlayerLastKnownPosition(transform.position);
+        if (aiScript != null) aiScript.UpdatePlayerLastKnownPosition(transform.position);
         itemControllerScript.Pull(5);
         isPulling = true;
         itemRunScript.itemSpeed = itemRunScript.itemSpeedUp;
