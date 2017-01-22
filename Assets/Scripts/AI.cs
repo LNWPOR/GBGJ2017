@@ -60,7 +60,7 @@ public class AI : Character {
   public GameObject splashstep;
   public AudioSource sound;
   public AudioClip[] footstep;
-  public Animator m_animator;
+  private Animator m_animator;
   private Controller playerScript;
 
   // private List<DNA> dna = new List<DNA>();

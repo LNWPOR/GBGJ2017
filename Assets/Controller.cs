@@ -4,7 +4,7 @@ using System.Collections;
 public class Controller : Character {
   public Rigidbody player;
   public GameObject AI;
-  public Animator m_animator;
+  private Animator m_animator;
   public float speed;
   public int NumSound = 6;
   int isMove;
@@ -14,6 +14,7 @@ public class Controller : Character {
   private bool isRunning = false;
   private bool isCtrlDown = false;
   private bool isDiving = false;
+  private float stepInterval = 12.5f;
 
   private float timeAfterDiving = 0f;
   private float timeAbleToDive = 60f;
@@ -87,10 +88,10 @@ public class Controller : Character {
       splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
       player.velocity = new Vector3(0, 0, 0);
     }
-    if (isMove >= 5) {
+    if (isMove >= stepInterval / 2) {
       isRunning = true;
     }
-    if (isMove == 10) {
+    if (isMove >= stepInterval) {
       int randomFootstep = Random.Range(0, NumSound);
       sound.PlayOneShot(footstep[randomFootstep], 1);
       base.GenerateSound(false, 50f);
