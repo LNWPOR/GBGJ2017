@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour {
       isDivingLabel = "Above water";
     }
     time++;
-    if (aiScript.CanKillPlayer()) {
+    if (aiScript.GetKilledPlayer()) {
       stateLabel = "DIE!";
     }
 	}
