@@ -40,8 +40,7 @@ public class ItemController : Character {
 
   public void Pull(float damage)
   {
-        if (!isPulling)
-        {
+
             if (itemCurrentHP - damage > 0)
             {
                 itemCurrentHP = itemCurrentHP - damage;
@@ -57,11 +56,6 @@ public class ItemController : Character {
                 itemInRangeList.RemoveAt(index);
                 Destroy(gameObject);
             }
-            isPulling = true;
-            RunAwayAndTurnAround itemParentScript = transform.parent.GetComponent<RunAwayAndTurnAround>();
-            itemParentScript.itemSpeed = itemParentScript.itemSpeedUp;
-            StartCoroutine(WaitPulling(pullingCooldown));
-        }
     
   }
 
@@ -75,14 +69,5 @@ public class ItemController : Character {
     // GetComponent<Renderer>().material.color = new Color(itemStartColorR, itemStartColorG, itemStartColorB, percentCurrentHP);
   }
 
-    private IEnumerator WaitPulling(float time)
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(time);
-            isPulling = false;
-            RunAwayAndTurnAround itemParentScript = transform.parent.GetComponent<RunAwayAndTurnAround>();
-            itemParentScript.itemSpeed = itemParentScript.itemStartSpeed;
-        }
-    }
+    
 }

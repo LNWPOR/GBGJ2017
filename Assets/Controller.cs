@@ -21,6 +21,12 @@ public class Controller : Character {
   private float divingCooldownCount;
   private float divingCooldown = 200f;
 
+    private bool isPulling = false;
+    public float pullingCooldown = 1f;
+    ItemController itemControllerScript;
+    RunAwayAndTurnAround itemRunScript;
+
+
   public override void Start() {
     base.Start();
     isMove = 0;
@@ -130,12 +136,25 @@ public class Controller : Character {
     if (other.gameObject.tag.Equals("Item"))
     {
       float damage = 5;
-      ItemController itemControllerScript = other.gameObject.GetComponent<ItemController>();
-      if (Input.GetKeyDown("space"))
+      itemControllerScript = other.gameObject.GetComponent<ItemController>();
+      itemRunScript = other.gameObject.transform.parent.gameObject.GetComponent<RunAwayAndTurnAround>();
+      if (Input.GetKeyDown("space") && !isPulling)
       {
         base.GenerateSound(true, 70f);
         itemControllerScript.Pull(5);
+        isPulling = true;
+        itemRunScript.itemSpeed = itemRunScript.itemSpeedUp;
+        StartCoroutine(WaitPulling(pullingCooldown));
       }
     }
   }
+    private IEnumerator WaitPulling(float time)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(time);
+            isPulling = false;
+            itemRunScript.itemSpeed = itemRunScript.itemSpeedUp;
+        }
+    }
 }
