@@ -60,6 +60,7 @@ public class AI : Character {
   public AudioClip[] footstep;
   private Animator m_animator;
   private Controller playerScript;
+  public Rigidbody aiRigidbody;
 
   // private List<DNA> dna = new List<DNA>();
   private DNA currentDNA;
@@ -105,23 +106,26 @@ public class AI : Character {
     if (isAddedScene) return;
     if (timeSinceLastJump == jumpInterval) {
   	  m_animator.SetBool ("IsJump", false);
+      Vector2 gene = currentDNA.genes[timeJumped];
       Jump();
       timeSinceLastJump = 0;
       defaultPosition = transform.position;
       isOnTheFloor = true;
+      aiRigidbody.velocity = new Vector3(0, 0 ,0);
     } else {
       timeSinceLastJump++;
       splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
-      if (timeSinceLastJump >= beforeJumpInterval) {
+      if (timeSinceLastJump == beforeJumpInterval) {
         // isOnTheFloor = false;
         Vector2 gene = currentDNA.genes[timeJumped];
-        int time = timeSinceLastJump - beforeJumpInterval;
-        float fracJourney = time * 1f / (jumpInterval - beforeJumpInterval);
+        // int time = timeSinceLastJump - beforeJumpInterval;
+        // float fracJourney = time * 1f / (jumpInterval - beforeJumpInterval);
         Vector3 targetPosition = defaultPosition + new Vector3(gene.x, 0, gene.y);
         transform.LookAt(targetPosition);
         transform.Rotate(0, 0, 0);
-        transform.position = Vector3.Lerp(defaultPosition, targetPosition, fracJourney);
-		m_animator.SetBool ("IsJump", true);
+        aiRigidbody.velocity = new Vector3(gene.x, 0, gene.y).normalized * speed;
+        // transform.position = Vector3.Lerp(defaultPosition, targetPosition, fracJourney);
+		    m_animator.SetBool ("IsJump", true);
       }
     }
 	}
