@@ -26,11 +26,19 @@ public class ItemColliderCheck : MonoBehaviour {
     
     void UpdateCamraZoom()
     {
-        if (!itemInRangeList.Count.Equals(0))
+        if (camera.transform.position.y < cameraControllerScript.minPosY)
+        {
+            newCamPos = new Vector3(currentNearestItem.transform.position.x, 
+                                                    cameraControllerScript.minPosY, 
+                                                    currentNearestItem.transform.position.z);
+        }
+        else if (!itemInRangeList.Count.Equals(0))
         {
             float percentOffset = currentNearestOffset / 6f;
             //Debug.Log(3+ percentOffset * (9 - 3f));
-            newCamPos = new Vector3(camera.transform.position.x, cameraControllerScript.minPosY + percentOffset * (cameraControllerScript.normalPosY - cameraControllerScript.minPosY), camera.transform.position.z);
+            newCamPos = new Vector3(currentNearestItem.transform.position.x, 
+                                    cameraControllerScript.minPosY + percentOffset * (cameraControllerScript.normalPosY - cameraControllerScript.minPosY),
+                                    currentNearestItem.transform.position.z);
         }
         else
         {

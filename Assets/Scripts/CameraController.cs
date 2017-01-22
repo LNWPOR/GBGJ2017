@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour {
 
     private Animator anim;
     public float normalPosY = 9f;
-    public float minPosY = 3f;
+    public float minPosY = 5f;
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -17,10 +17,7 @@ public class CameraController : MonoBehaviour {
     }
 	
 	void Update () {
-       if (transform.position.y < minPosY)
-        {
-            transform.position = new Vector3(transform.position.x, minPosY, transform.position.z);
-        }
+       
 	}
 
     public void ZoomInStep1()
