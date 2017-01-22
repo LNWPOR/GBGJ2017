@@ -9,6 +9,8 @@ public class DNA {
   public float fitness;
   public bool isKilledPlayer = false;
 
+  
+
   public DNA (Vector2[] newGenes) {
     genes = newGenes;
     fitness = 1;
@@ -55,6 +57,9 @@ public class DNA {
 public class AI : Character {
   public static int size = 10;
   public GameObject player;
+  public GameObject splashstep;
+  public AudioSource sound;
+  public AudioClip[] footstep;
   private Controller playerScript;
 
   // private List<DNA> dna = new List<DNA>();
@@ -151,13 +156,18 @@ public class AI : Character {
   }
 
   void Jump() {
-    base.GenerateSound(false, 50f);
-    if (timeJumped < currentDNA.genes.Length - 1) {
-      timeJumped++;
-    } else {
-      timeJumped = 0;
-      UpdatePlayerLastKnownPosition(player.transform.position);
-    }
+        if (timeJumped < currentDNA.genes.Length - 1) {
+            int randomFootstep = Random.Range(0, 2);
+            sound.PlayOneShot(footstep[randomFootstep], 1);
+            splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
+            timeJumped++;
+            base.GenerateSound(false, 50f);
+        } else {
+            splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 2f;
+            timeJumped = 0;
+            UpdatePlayerLastKnownPosition(player.transform.position);
+            base.GenerateSound(false, 50f);
+        }
   }
 
   public bool CanKillPlayer() {
