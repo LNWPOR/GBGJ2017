@@ -5,26 +5,26 @@ public class exampleSceneScript : MonoBehaviour {
 
 	// Use this for initialization
 	
-	public float scale = 0.6f;
-	public float intensity = 0.8f;
-	public float alpha = 0.45f;
-	public float alphasub = 0.05f;
-	public float pow = 1.2f;
-	public Color color = new Color(1f, 0.95f, 0.9f, 1.0f);
-	public Material fogMaterial;
+	private float scale = 0.6f;
+	private float intensity = 0.828f;
+	private float alpha = 0.23f;
+	private float alphasub = 0.074f;
+	private float pow = 0.6f;
+	private Color color = new Color(1f, 0.95f, 0.95f, 1f);
+	private Material fogMaterial;
 	
 	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
 		fogMaterial.SetFloat("_Scale", scale);
 		fogMaterial.SetFloat("_Intensity", intensity);
 		fogMaterial.SetFloat("_Alpha", alpha);
 		fogMaterial.SetFloat("_AlphaSub", alphasub);
 		fogMaterial.SetFloat("_Pow", pow);
 		fogMaterial.SetColor("_Color", color);
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
 		
 	}
 	

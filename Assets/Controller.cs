@@ -4,6 +4,7 @@ using System.Collections;
 public class Controller : Character {
   public Rigidbody player;
   public GameObject AI;
+  public Animator m_animator;
   public float speed;
   public int NumSound = 6;
   int isMove;
@@ -24,6 +25,7 @@ public class Controller : Character {
     isMove = 0;
     tag = "Player";
     AI = GameObject.Find("AI");
+		m_animator = transform.GetChild(3).GetComponent<Animator> ();
     divingCooldownCount = divingCooldown;
   }
 
@@ -75,11 +77,13 @@ public class Controller : Character {
         splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
         player.velocity = new Vector3(x, 0, z).normalized * speed * 2f;
         isMove += 1;
+		m_animator.SetBool ("IsMove", true);
       }
     }
     else {
       isRunning = false;
       isMove = 0;
+	  m_animator.SetBool ("IsMove", false);
       splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
       player.velocity = new Vector3(0, 0, 0);
     }

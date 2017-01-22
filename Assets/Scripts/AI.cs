@@ -60,6 +60,7 @@ public class AI : Character {
   public GameObject splashstep;
   public AudioSource sound;
   public AudioClip[] footstep;
+  public Animator m_animator;
   private Controller playerScript;
 
   // private List<DNA> dna = new List<DNA>();
@@ -94,6 +95,7 @@ public class AI : Character {
     currentDNA = new DNA(transform.position, playerLastKnownPosition);
     defaultPosition = transform.position;
     playerScript = player.GetComponent<Controller>();
+	m_animator = transform.GetChild (1).GetComponent<Animator> ();
     // GetComponent<Renderer>().enabled = false;
 	}
 
@@ -103,6 +105,8 @@ public class AI : Character {
     if (killedPlayer) return;
     if (isAddedScene) return;
     if (timeSinceLastJump == jumpInterval) {
+	  m_animator.SetBool ("IsJump", false);
+	  Debug.Log ("Im Jumpu!!");
       Jump();
       timeSinceLastJump = 0;
       defaultPosition = transform.position;
@@ -119,6 +123,7 @@ public class AI : Character {
         transform.LookAt(targetPosition);
         transform.Rotate(0, 0, 0);
         transform.position = Vector3.Lerp(defaultPosition, targetPosition, fracJourney);
+		m_animator.SetBool ("IsJump", true);
       }
     }
 	}
