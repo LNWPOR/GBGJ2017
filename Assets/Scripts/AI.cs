@@ -69,7 +69,7 @@ public class AI : Character {
   private int timeJumped = 0;
 
   private Vector3 playerLastKnownPosition;
-  public static float speed = 4f;
+  public static float speed = 6f;
   public static int jumpInterval = 40;
   public static int beforeJumpInterval = jumpInterval / 2;
   public static int degStep = 20;
