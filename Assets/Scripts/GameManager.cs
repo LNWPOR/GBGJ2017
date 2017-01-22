@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
     stateLabel = "Run, Forest, RUN!";
+    ai = GameObject.Find("AI");
     aiScript = ai.GetComponent<AI>();
     playerScript = player.GetComponent<Controller>();
 	}
