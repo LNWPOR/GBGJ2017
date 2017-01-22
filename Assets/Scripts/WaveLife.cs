@@ -61,6 +61,7 @@ public class WaveLife : MonoBehaviour {
     } else if (other.gameObject.tag.Equals("AI")) {
       AI aiControllerScript = other.gameObject.GetComponent<AI>();
       if (!aiControllerScript.IsOnTheFloor()) return;
+      Debug.Log("Player from: " + sourcePosition);
       if (sourceTag == "Player") {
         aiControllerScript.UpdatePlayerLastKnownPosition(sourcePosition);
       } else if (!isWaveSecondhand && aiControllerScript.IsResonanceable()) {
