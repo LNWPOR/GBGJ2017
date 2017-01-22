@@ -156,7 +156,7 @@ public class AI : Character {
       timeJumped++;
     } else {
       timeJumped = 0;
-      UpdatePlayerLastKnownPosition(player.transform.position);
+      // UpdatePlayerLastKnownPosition(player.transform.position);
     }
   }
 
