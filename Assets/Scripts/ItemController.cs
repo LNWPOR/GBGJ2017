@@ -12,6 +12,8 @@ public class ItemController : Character {
   public GameObject mainCamera;
   private float timeGotHit = 0;
   private float fadeOutTime = 8f;
+  private bool isPulling = false;
+  public float pullingCooldown = 1f;
 
   public override void Start () {
     base.Start();
@@ -38,19 +40,29 @@ public class ItemController : Character {
 
   public void Pull(float damage)
   {
-    if (itemCurrentHP - damage > 0) {
-      itemCurrentHP = itemCurrentHP - damage;
-      CalculateCurrentColor(itemCurrentHP);
-    }
-    else {
-      itemCurrentHP = 0;
-      CalculateCurrentColor(itemCurrentHP);
-      //mainCamera.GetComponent<CameraController>().ZoomOutStep2();
-      List<GameObject> itemInRangeList = GameObject.Find("ItemColliderCheck").GetComponent<ItemColliderCheck>().itemInRangeList;
-      int index = itemInRangeList.FindIndex(x => x.gameObject.name.Equals(gameObject.name));
-      itemInRangeList.RemoveAt(index);
-      Destroy(gameObject);
-    }
+        if (!isPulling)
+        {
+            if (itemCurrentHP - damage > 0)
+            {
+                itemCurrentHP = itemCurrentHP - damage;
+                CalculateCurrentColor(itemCurrentHP);
+            }
+            else
+            {
+                itemCurrentHP = 0;
+                CalculateCurrentColor(itemCurrentHP);
+                //mainCamera.GetComponent<CameraController>().ZoomOutStep2();
+                List<GameObject> itemInRangeList = GameObject.Find("ItemColliderCheck").GetComponent<ItemColliderCheck>().itemInRangeList;
+                int index = itemInRangeList.FindIndex(x => x.gameObject.name.Equals(gameObject.name));
+                itemInRangeList.RemoveAt(index);
+                Destroy(gameObject);
+            }
+            isPulling = true;
+            RunAwayAndTurnAround itemParentScript = transform.parent.GetComponent<RunAwayAndTurnAround>();
+            itemParentScript.itemSpeed = itemParentScript.itemSpeedUp;
+            StartCoroutine(WaitPulling(pullingCooldown));
+        }
+    
   }
 
   public void GetHitByWave() {
@@ -62,4 +74,15 @@ public class ItemController : Character {
     float percentCurrentHP = itemCurrentHP / itemStartHP;
     // GetComponent<Renderer>().material.color = new Color(itemStartColorR, itemStartColorG, itemStartColorB, percentCurrentHP);
   }
+
+    private IEnumerator WaitPulling(float time)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(time);
+            isPulling = false;
+            RunAwayAndTurnAround itemParentScript = transform.parent.GetComponent<RunAwayAndTurnAround>();
+            itemParentScript.itemSpeed = itemParentScript.itemStartSpeed;
+        }
+    }
 }

@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class RunAwayAndTurnAround : MonoBehaviour {
     public float spinSpeed = 10f, itemSpeed = 2.4f;
+    public float itemStartSpeed;
+    public float itemSpeedUp = 6f;
     public Rigidbody item;
 	// Use this for initialization
 	void Start () {
+        itemStartSpeed = itemSpeed;
         float x, z;
         x = Random.Range(-1f, 1f);
         z = Random.Range(-1f, 1f);
