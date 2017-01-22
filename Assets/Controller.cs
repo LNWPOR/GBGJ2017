@@ -4,6 +4,7 @@ using System.Collections;
 public class Controller : Character {
   public Rigidbody player;
   public GameObject AI;
+  private AI aiScript;
   private Animator m_animator;
   public float speed;
   public int NumSound = 6;
@@ -21,7 +22,7 @@ public class Controller : Character {
   private float divingCooldownCount;
   private float divingCooldown = 200f;
 
-  private float waveLifespan = 30f;
+  public static float waveLifespan = 30f;
 
     private bool isPulling = false;
     public float pullingCooldown = 1f;
@@ -34,6 +35,7 @@ public class Controller : Character {
     isMove = 0;
     tag = "Player";
     AI = GameObject.Find("AI");
+    aiScript = AI.GetComponent<AI>();
 		m_animator = transform.GetChild(3).GetComponent<Animator> ();
     divingCooldownCount = divingCooldown;
   }
@@ -133,7 +135,8 @@ public class Controller : Character {
       itemRunScript = other.gameObject.transform.parent.gameObject.GetComponent<RunAwayAndTurnAround>();
       if (Input.GetKeyDown("space") && !isPulling)
       {
-        base.GenerateSound(true, 70f);
+        // base.GenerateSound(true, 50f);
+        aiScript.UpdatePlayerLastKnownPosition(transform.position);
         itemControllerScript.Pull(5);
         isPulling = true;
         itemRunScript.itemSpeed = itemRunScript.itemSpeedUp;

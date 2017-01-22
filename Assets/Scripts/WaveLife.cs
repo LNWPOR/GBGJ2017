@@ -63,7 +63,7 @@ public class WaveLife : MonoBehaviour {
     } else if (other.gameObject.tag.Equals("Player")) {
       Controller playerControllerScript = other.gameObject.GetComponent<Controller>();
       if (!isWaveSecondhand && playerControllerScript.IsResonanceable()) {
-        playerControllerScript.GenerateSound(true, 50f);
+        playerControllerScript.GenerateSound(true, Controller.waveLifespan);
       }
       Destroy(gameObject);
     } else if (other.gameObject.tag.Equals("AI")) {
