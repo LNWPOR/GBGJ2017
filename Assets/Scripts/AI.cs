@@ -168,6 +168,7 @@ public class AI : Character {
             UpdatePlayerLastKnownPosition(player.transform.position);
             base.GenerateSound(false, 50f);
         }
+
   }
 
   public bool CanKillPlayer() {
