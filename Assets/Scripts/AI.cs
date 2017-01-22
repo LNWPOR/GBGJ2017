@@ -9,7 +9,7 @@ public class DNA {
   public float fitness;
   public bool isKilledPlayer = false;
 
-  
+
 
   public DNA (Vector2[] newGenes) {
     genes = newGenes;
@@ -107,6 +107,7 @@ public class AI : Character {
       isOnTheFloor = true;
     } else {
       timeSinceLastJump++;
+      splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
       if (timeSinceLastJump >= beforeJumpInterval) {
         isOnTheFloor = false;
         Vector2 gene = currentDNA.genes[timeJumped];
@@ -156,19 +157,17 @@ public class AI : Character {
   }
 
   void Jump() {
-        if (timeJumped < currentDNA.genes.Length - 1) {
-            int randomFootstep = Random.Range(0, 2);
-            sound.PlayOneShot(footstep[randomFootstep], 1);
-            splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
-            timeJumped++;
-            base.GenerateSound(false, 50f);
-        } else {
-            splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 2f;
-            timeJumped = 0;
-            UpdatePlayerLastKnownPosition(player.transform.position);
-            base.GenerateSound(false, 50f);
-        }
-
+    splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 5f;
+    if (timeJumped < currentDNA.genes.Length - 1) {
+      int randomFootstep = Random.Range(0, 2);
+      sound.PlayOneShot(footstep[randomFootstep], 1);
+      timeJumped++;
+      base.GenerateSound(false, 50f);
+    } else {
+      timeJumped = 0;
+      UpdatePlayerLastKnownPosition(player.transform.position);
+      base.GenerateSound(false, 50f);
+    }
   }
 
   public bool CanKillPlayer() {
