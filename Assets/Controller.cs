@@ -17,7 +17,7 @@ public class Controller : Character {
   private float stepInterval = 12.5f;
 
   private float timeAfterDiving = 0f;
-  private float timeAbleToDive = 60f;
+  private float timeAbleToDive = 120f;
   private float divingCooldownCount;
   private float divingCooldown = 200f;
 
@@ -66,7 +66,7 @@ public class Controller : Character {
         isDiving = true;
         timeAfterDiving++;
         isMove = 0;
-        player.velocity = new Vector3(x, 0, z).normalized * speed;
+        player.velocity = new Vector3(x, 0, z).normalized * speed * 2f;
         splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0.3f;
       } else {
         isDiving = false;

@@ -68,8 +68,8 @@ public class AI : Character {
   private int timeJumped = 0;
 
   private Vector3 playerLastKnownPosition;
-  public static float speed = 5f;
-  public static int jumpInterval = 30;
+  public static float speed = 4f;
+  public static int jumpInterval = 40;
   public static int beforeJumpInterval = jumpInterval / 2;
   public static int degStep = 20;
   public static float rangeClose = 18f;
@@ -104,8 +104,7 @@ public class AI : Character {
     if (killedPlayer) return;
     if (isAddedScene) return;
     if (timeSinceLastJump == jumpInterval) {
-	  m_animator.SetBool ("IsJump", false);
-	  Debug.Log ("Im Jumpu!!");
+  	  m_animator.SetBool ("IsJump", false);
       Jump();
       timeSinceLastJump = 0;
       defaultPosition = transform.position;
@@ -167,6 +166,7 @@ public class AI : Character {
       timeJumped = 0;
       updatedLastKnown = false;
       currentDNA = GenerateNewDNA();
+      Debug.Log(transform.position + " :: " + playerLastKnownPosition);
     }
     if (timeJumped < currentDNA.genes.Length - 1) {
       int randomFootstep = Random.Range(0, 2);
@@ -176,7 +176,6 @@ public class AI : Character {
     } else {
       timeJumped = 0;
       // UpdatePlayerLastKnownPosition(player.transform.position);
-      Debug.Log(transform.position + " :: " + playerLastKnownPosition);
       currentDNA = GenerateNewDNA();
       base.GenerateSound(false, 50f);
     }

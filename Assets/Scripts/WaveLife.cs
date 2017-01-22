@@ -17,7 +17,15 @@ public class WaveLife : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
     life += 1;
-    Color fadedColor = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 1f - (life / lifespan));
+    float fadingRate = 1f;
+    if (life > lifespan * 0.9f) {
+      fadingRate = 1f - (life - lifespan * 0.9f) / (lifespan * 0.1f);
+    }
+    Color fadedColor = new Color( GetComponent<Renderer>().material.color.r,
+                                  GetComponent<Renderer>().material.color.g,
+                                  GetComponent<Renderer>().material.color.b,
+                                  fadingRate
+                                );
     GetComponent<Renderer>().material.color = fadedColor;
     GetComponent<TrailRenderer>().materials[0].color = fadedColor;
     if (life >= lifespan) {
