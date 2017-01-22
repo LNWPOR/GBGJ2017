@@ -68,8 +68,8 @@ public class AI : Character {
   private int timeJumped = 0;
 
   private Vector3 playerLastKnownPosition;
-  public static float speed = 2f;
-  public static int jumpInterval = 20;
+  public static float speed = 5f;
+  public static int jumpInterval = 30;
   public static int beforeJumpInterval = jumpInterval / 2;
   public static int degStep = 20;
   public static float rangeClose = 18f;
@@ -80,6 +80,7 @@ public class AI : Character {
   public bool isOnTheFloor = true;
   private bool isAddedScene = false;
   private bool killedPlayer = false;
+  private bool updatedLastKnown = false;
 
 	// Use this for initialization
 	public override void Start () {
@@ -113,7 +114,7 @@ public class AI : Character {
       timeSinceLastJump++;
       splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 0f;
       if (timeSinceLastJump >= beforeJumpInterval) {
-        isOnTheFloor = false;
+        // isOnTheFloor = false;
         Vector2 gene = currentDNA.genes[timeJumped];
         int time = timeSinceLastJump - beforeJumpInterval;
         float fracJourney = time * 1f / (jumpInterval - beforeJumpInterval);
@@ -156,13 +157,17 @@ public class AI : Character {
 
   public void UpdatePlayerLastKnownPosition(Vector3 pos) {
     playerLastKnownPosition = pos;
-    currentDNA = GenerateNewDNA();
-    timeSinceLastJump = beforeJumpInterval;
-    timeJumped = 0;
+    // timeSinceLastJump = beforeJumpInterval;
+    updatedLastKnown = true;
   }
 
   void Jump() {
     splashstep.GetComponent<EllipsoidParticleEmitter>().maxSize = 5f;
+    if (updatedLastKnown) {
+      timeJumped = 0;
+      updatedLastKnown = false;
+      currentDNA = GenerateNewDNA();
+    }
     if (timeJumped < currentDNA.genes.Length - 1) {
       int randomFootstep = Random.Range(0, 2);
       sound.PlayOneShot(footstep[randomFootstep], 1);
