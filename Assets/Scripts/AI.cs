@@ -72,8 +72,8 @@ public class AI : Character {
   public static float speed = 6f;
   public static int jumpInterval = 40;
   public static int beforeJumpInterval = jumpInterval / 2;
-  public static int degStep = 20;
-  public static float rangeClose = 18f;
+  public static int degStep = 12;
+  public static float rangeClose = 10f;
 
   public static List<DNA>[,] dnaLegacy;
   private int currentDegRegion = 0;
@@ -229,7 +229,8 @@ public class AI : Character {
     Vector2 aiPos = new Vector2(transform.position.x, transform.position.z);
     Vector2 playerPos = new Vector2(playerLastKnownPosition.x, playerLastKnownPosition.z);
     float angle = DNA.AngleBetweenVector2(aiPos, playerPos);
-    int degRegion = Mathf.FloorToInt((angle + 360) % 360 / degStep);
+    int degRegion = Mathf.FloorToInt((angle + 360) % 360 / (360f / degStep));
+        Debug.Log("Deg region: " + degRegion);
     currentRangeRegion = rangeRegion;
     currentDegRegion = degRegion;
   }
@@ -266,14 +267,13 @@ public class AI : Character {
     }
     float mutationRate = 0.1f;
     float prob = Random.Range(0.0f, 1.0f);
-    if (dna.Count >= 2 && prob > mutationRate) {
+        Debug.Log("Prob: " + prob);
+    if (matingPool.Count >= 2 && prob > mutationRate) {
       int indexA = Random.Range(0, matingPool.Count - 1);
       DNA parentA = matingPool[indexA];
       int indexB = Random.Range(0, matingPool.Count - 1);
-      while (indexA == indexB) {
-        indexB = Random.Range(0, matingPool.Count - 1);
-      }
       DNA parentB = matingPool[indexB];
+            Debug.Log("Before crossover");
       return Crossover(parentA, parentB);
     } else {
       return new DNA(transform.position, playerLastKnownPosition);

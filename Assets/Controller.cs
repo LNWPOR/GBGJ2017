@@ -4,7 +4,7 @@ using System.Collections;
 public class Controller : Character {
   public Rigidbody player;
   public GameObject AI;
-    public GameObject itemget;
+    
   private AI aiScript;
   private Animator m_animator;
   public float speed;
@@ -58,11 +58,11 @@ public class Controller : Character {
     if (Input.GetKey("d")) {
       x = 1;
     }
-    if ((Input.GetKeyUp(KeyCode.LeftControl) && timeAfterDiving > 0) || timeAfterDiving >= timeAbleToDive) {
+    if ((Input.GetKeyUp(KeyCode.F) && timeAfterDiving > 0) || timeAfterDiving >= timeAbleToDive) {
       divingCooldownCount = 0;
       timeAfterDiving = 0;
     }
-    if (Input.GetKey(KeyCode.LeftControl)) {
+    if (Input.GetKey(KeyCode.F)) {
       isCtrlDown = true;
     } else {
       isCtrlDown = false;
@@ -138,8 +138,6 @@ public class Controller : Character {
       itemRunScript = other.gameObject.transform.parent.gameObject.GetComponent<RunAwayAndTurnAround>();
       if (Input.GetKeyDown("space") && !isPulling)
       {
-        itemget.GetComponent<EllipsoidParticleEmitter>().maxSize = 1f;
-        itemget.transform.position = this.transform.position;
                 // base.GenerateSound(true, 50f);
         if (aiScript != null) aiScript.UpdatePlayerLastKnownPosition(transform.position);
         itemControllerScript.Pull(5);
