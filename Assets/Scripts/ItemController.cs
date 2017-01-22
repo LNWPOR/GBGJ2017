@@ -54,7 +54,7 @@ public class ItemController : Character {
                 List<GameObject> itemInRangeList = GameObject.Find("ItemColliderCheck").GetComponent<ItemColliderCheck>().itemInRangeList;
                 int index = itemInRangeList.FindIndex(x => x.gameObject.name.Equals(gameObject.name));
                 itemInRangeList.RemoveAt(index);
-                Destroy(gameObject);
+                Destroy(gameObject.transform.parent.gameObject);
             }
     
   }
